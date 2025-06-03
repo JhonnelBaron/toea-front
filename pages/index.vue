@@ -23,7 +23,7 @@ import CriteriaA from '~/components/Criterias/CriteriaA.vue'
 import CriteriaB from '~/components/Criterias/CriteriaB.vue'
 import CriteriaC from '~/components/Criterias/CriteriaC.vue'
 import CriteriaD from '~/components/Criterias/CriteriaD.vue'
-import CriteriaE from '~/components/Criterias/CriteriaE.vue'
+import CriteriaE from '~/components/Criterias/CriteriaE.vue';
 
 const activeTab = ref('A')
 
