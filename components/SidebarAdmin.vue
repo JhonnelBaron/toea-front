@@ -1,6 +1,6 @@
 <template>
  <!-- Floating Sidebar -->
- <div class="w-72 h-screen bg-gray-100 rounded-r-2xl shadow-lg p-4 flex flex-col justify-between">
+ <div class="w-72 h-screen bg-blue-200 shadow-lg p-4 flex flex-col justify-between">
   <!-- Top Section (Profile) -->
   <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
     <img
@@ -55,9 +55,11 @@
     <div class="flex-grow"></div>
 
     <!-- Logout -->
-    <button class="w-24 text-center px-4 py-1 rounded-lg bg-blue-600 text-white hover:bg-red-600 hover:text-white font-medium items-center justify-center mx-auto">
-      Logout
-    </button>
+    <NuxtLink class="items-center justify-center mx-auto" to="/login">
+      <button class="w-24 text-center px-4 py-1 rounded-lg bg-blue-600 text-white hover:bg-red-600 hover:text-white font-medium">
+        Logout
+      </button>
+    </NuxtLink>
   </div>
 
 </div>

@@ -40,7 +40,7 @@
     </form>
     <p class="text-sm text-gray-600 flex items-center justify-center pt-10">
       Don't have an account?
-      <a href="#" class="text-blue-600 hover:underline ml-1">Sign up</a>
+      <NuxtLink class="text-blue-600 hover:underline ml-1" to="/register">Sign up</NuxtLink>
     </p>
   </div>
 </div>

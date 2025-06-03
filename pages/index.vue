@@ -2,7 +2,7 @@
   <div class="flex h-screen overflow-hidden"> 
     <SidebarAdmin />
 
-    <div class="flex-1 bg-gray-100 flex flex-col">
+    <div class="flex-1 bg-blue-200 flex flex-col">
       <!-- Tab Header -->
       <CriteriaNavigator :activeTab="activeTab" @tab-change="activeTab = $event" />
       <!-- Tab Content -->
