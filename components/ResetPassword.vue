@@ -4,11 +4,11 @@
     <img
       src="/images/toeaLogo.png"
       alt="Logo"
-      class="w-40 h-40 mb-[-80px] z-10 relative border-4 border-gray-200 rounded-full bg-gray-200"
+      class="w-26 h-26 mb-[-40px] z-10 relative border-4 border-white rounded-full bg-white"
     />
 
-          <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Reset Your Password</h2>
+      <div class="bg-white p-8 rounded-lg shadow-lg w-96 max-w-full">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 mt-4 text-center">RESET PASSWORD</h2>
   
         <form @submit.prevent="handleResetLink">
           <div class="mb-4">
@@ -22,10 +22,10 @@
             />
           </div>
   
-          <div v-if="message" class="mb-4 text-green-600">
+          <div v-if="message" class="text-xs mb-4 text-blue-600">
             {{ message }}
           </div>
-          <div v-if="error" class="mb-4 text-red-600">
+          <div v-if="error" class="mb-4 text-red-600 text-xs">
             {{ error }}
           </div>
   
@@ -39,12 +39,15 @@
     Processing...
   </div>
             <!-- <div v-if="isLoading" class="loader mr-2"></div> -->
-            <span v-if="!isLoading">Send Reset Link</span>
+            <span v-if="!isLoading" class="text-xs font-medium">SUBMIT</span>
           </button>
         </form>
   
-        <p class="mt-4 text-sm text-center text-gray-600">
-          Remember your password? <NuxtLink to="/" class="hover:underline" style="color: #E81A1A;">Login here</NuxtLink>
+        <p class="mt-4 text-xs text-center text-gray-600">
+          Remember your password?
+        </p>
+        <p class="text-xs text-center text-gray-600">
+        <NuxtLink to="/" class="hover:underline text-xs text-center text-blue-700 hover:text-red-700">Login here</NuxtLink>
         </p>
       </div>
 

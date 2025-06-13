@@ -4,20 +4,20 @@
     <img
       src="/images/toeaLogo.png"
       alt="Logo"
-      class="w-40 h-40 mb-[-80px] z-10 relative border-4 border-gray-200 rounded-full bg-gray-200"
+      class="w-26 h-26 mb-[-50px] z-10 relative border-4 border-white rounded-full bg-white"
     />
 
     <!-- Form container -->
-    <div class="bg-gray-200 p-5 rounded-lg shadow-md w-4xl pt-20 relative z-0">
-      <h2 class="text-2xl font-bold mb-6 text-center">Nominee Account Registration</h2>
-      <form @submit.prevent="submitForm" class="space-y-6">
+    <div class="bg-white p-5 rounded-lg shadow-md w-4xl pt-10 relative z-0">
+      <h2 class="text-lg font-bold mb-6 underline">Nominee Account Registration</h2>
+      <form @submit.prevent="submitForm" class="space-y-2">
 
   <!-- Row 2: Award + Category + Region -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <div>
-      <label class="block text-sm font-medium text-gray-700">Award</label>
+      <label class="block text-xs font-medium text-gray-700">Award</label>
       <select v-model="form.award" required
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm">
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs">
         <option disabled value="">Select Award</option>
         <!-- <option value="Best Regional Office">Best Regional Office</option> -->
         <option value="Galing Probinsya">Galing Probinsya</option>
@@ -26,9 +26,9 @@
     </div>
 
         <div>
-      <label class="block text-sm font-medium text-gray-700">Category</label>
+      <label class="block text-xs font-medium text-gray-700">Category</label>
       <select v-model="form.category" required
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm">
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs">
         <option disabled value="">Select Category</option>
         <option v-if="form.award !== 'Best Training Institution'" value="Small">Small</option>
         <option v-if="form.award !== 'Best Training Institution'" value="Medium">Medium</option>
@@ -40,9 +40,9 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700">Region</label>
+      <label class="block text-xs font-medium text-gray-700">Region</label>
       <select v-model="form.region" required
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm">
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs">
         <option disabled value="">Select Region</option>
         <option>Region I</option>
         <option>Region II</option>
@@ -64,36 +64,24 @@
     </div>
 
   </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-1 gap-4">
   <!-- Row 3: Name of Institution (only for Best Training Institution) -->
   <div v-if="form.award === 'Best Training Institution'">
-  <label class="block text-sm font-medium text-gray-700">Province</label>
-  <select
-    v-model="form.province"
-    :disabled="!availProvinces.length"
-    required
-    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
-  >
-    <option disabled value="">Select Province</option>
-    <option v-for="province in availProvinces" :key="province" :value="province">
-      {{ province }}
-    </option>
-  </select>
 </div>
   
   <div v-if="form.award === 'Best Training Institution'">
-    <label class="block text-sm font-medium text-gray-700">Name of Institution</label>
+    <label class="block text-xs font-medium text-gray-700">Name of Institution</label>
     <!-- <input
       type="text"
       v-model="form.institution"
-      class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+      class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
       required
       placeholder="Select Institution"
     /> -->
     <select
     v-model="form.institution"
     :disabled="!availableInstitution.length"
-    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
     required
   >
     <option disabled value="">Select Institution</option>
@@ -111,12 +99,12 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Row 4: Province (only for Galing Probinsya) -->
   <div v-if="form.award === 'Galing Probinsya'">
-  <label class="block text-sm font-medium text-gray-700">Province</label>
+  <label class="block text-xs font-medium text-gray-700">Province</label>
   <select
     v-model="form.province"
     :disabled="!availableProvinces.length"
     required
-    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
   >
     <option disabled value="">Select Province</option>
     <option v-for="province in availableProvinces" :key="province" :value="province">
@@ -125,12 +113,12 @@
   </select>
 </div>
     <div v-if="form.award === 'Galing Probinsya'">
-      <label class="block text-sm font-medium text-gray-700">Name</label>
+      <label class="block text-xs font-medium text-gray-700">Name</label>
       <input
         type="text"
         v-model="form.name"
           :readonly="form.award === 'Galing Probinsya'"
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
         required
         placeholder="Office"
       />
@@ -138,11 +126,11 @@
 
   </div>
       <div>
-      <label class="block text-sm font-medium text-gray-700">Email</label>
+      <label class="block text-xs font-medium text-gray-700">Email</label>
       <input
         type="email"
         v-model="form.email"
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
         required
         placeholder="juandelacruz@gmail.com"
       />
@@ -152,12 +140,12 @@
  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
   <!-- Password Field -->
   <div>
-    <label class="block text-sm font-medium text-gray-700">Password</label>
+    <label class="block text-xs font-medium text-gray-700">Password</label>
     <div class="relative">
       <input
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
         required
         placeholder="********"
       />
@@ -166,12 +154,12 @@
 
   <!-- Confirm Password Field -->
   <div>
-    <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+    <label class="block text-xs font-medium text-gray-700">Confirm Password</label>
     <div class="relative">
       <input
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password_confirmation"
-        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-sm"
+        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-500 text-xs"
         required
         placeholder="********"
       />
@@ -186,7 +174,7 @@
         v-model="showPassword"
         class="form-checkbox h-4 w-4 text-blue-600"
       />
-      <span class="ml-2 text-sm text-gray-600">Show Password</span>
+      <span class="ml-2 text-xs text-gray-600">Show Password</span>
     </label>
   </div>
 </div>
@@ -197,7 +185,7 @@
       class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
       Register
     </button>
-    <p class="text-sm text-gray-600 flex items-center justify-center pt-5">
+    <p class="text-xs text-gray-600 flex items-center justify-center pt-5">
       Already have an account?
       <NuxtLink class="text-blue-600 hover:underline ml-1" to="/login">Log in</NuxtLink>
 
