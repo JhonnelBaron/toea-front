@@ -4,8 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: ['@nuxtjs/tailwindcss'],
-  vite: {
-    plugins: [
-    ],
-  },
+  plugins: [ 
+    '~/plugins/axios.js',
+  ],
 })

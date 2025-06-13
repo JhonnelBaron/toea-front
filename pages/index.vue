@@ -26,6 +26,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  requiresAuth: true
+})
 import { ref } from 'vue'
 import SidebarAdmin from '~/components/SidebarAdmin.vue'
 import CriteriaNavigator from '~/components/CriteriaNavigator.vue'
@@ -35,6 +38,7 @@ import CriteriaB from '~/components/Criterias/CriteriaB.vue'
 import CriteriaC from '~/components/Criterias/CriteriaC.vue'
 import CriteriaD from '~/components/Criterias/CriteriaD.vue'
 import CriteriaE from '~/components/Criterias/CriteriaE.vue';
+
 
 const activeTab = ref('A')
 

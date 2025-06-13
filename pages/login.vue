@@ -38,5 +38,11 @@
 
 <script setup>
 import LoginForm from '~/components/LoginForm.vue'
-definePageMeta({ layout: 'empty' })
+
+definePageMeta({
+  layout: 'empty',
+  guestOnly: true,
+})
+
+
 </script>
