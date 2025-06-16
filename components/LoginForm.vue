@@ -86,7 +86,7 @@ async function submitLogin() {
       password: password.value,
     })
 
-    const token = res.data.token
+    const token = res.data.access_token
     localStorage.setItem('token', token)
 
     router.push('/') // or wherever you want to go
