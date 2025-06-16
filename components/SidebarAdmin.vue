@@ -78,7 +78,7 @@ const { $api } = useNuxtApp()
 const handleLogout = async () => {
   try {
     await $api.post('/logout') // Assumes Axios baseURL is set
-    localStorage.removeItem('token') // or any auth data you store
+    localStorage.removeItem('auth_token') // or any auth data you store
     router.push('/login')
   } catch (error) {
     console.error('Logout failed:', error)

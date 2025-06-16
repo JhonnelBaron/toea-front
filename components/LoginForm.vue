@@ -87,7 +87,7 @@ async function submitLogin() {
     })
 
     const token = res.data.access_token
-    localStorage.setItem('token', token)
+    localStorage.setItem('auth_token', token)
 
     router.push('/') // or wherever you want to go
   } catch (err) {

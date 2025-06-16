@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) =>{
 
     // Interceptor to include the token in each request
     api.interceptors.request.use(config => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('auth_token');
         if (token) {
         config.headers.Authorization = `Bearer ${token}`;  // Attach the token
         }
