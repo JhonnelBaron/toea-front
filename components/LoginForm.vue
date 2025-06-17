@@ -4,11 +4,11 @@
     <img
       src="/images/toeaLogo.png"
       alt="Logo"
-      class="w-40 h-40 mb-[-80px] z-10 relative border-4 border-gray-200 rounded-full bg-gray-200"
+      class="w-40 h-40 mb-[-80px] z-10 relative border-4 border-white rounded-full bg-white"
     />
 
     <!-- Form container -->
-    <div class="bg-gray-200 p-10 rounded-lg shadow-md w-md pt-20 relative z-0">
+    <div class="bg-white p-10 rounded-lg shadow-md w-md pt-20 relative z-0">
       <h2 class="text-2xl font-bold mb-6 text-center">Welcome!</h2>
       <form @submit.prevent="submitLogin" class="space-y-4">
         <div class="mb-4">
