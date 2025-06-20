@@ -72,4 +72,12 @@ yarn preview
 bun run preview
 ```
 
+## Others
+```bash
+using npm
+npm install vue-toastification@2.0.0-rc.5
+
+using pnpm
+pnpm add vue-toastification@2.0.0-rc.5
+
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
