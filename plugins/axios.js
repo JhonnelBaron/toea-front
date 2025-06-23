@@ -19,5 +19,20 @@ export default defineNuxtPlugin((nuxtApp) =>{
         return Promise.reject(error);
     });
 
+        // ✅ Response Interceptor: Catch expired/invalid token
+    api.interceptors.response.use(response => {
+        return response;
+    }, error => {
+        if (error.response && error.response.status === 401) {
+            // Clear token or user state if needed
+            localStorage.removeItem('auth_token');
+
+            // Redirect to login using Nuxt's built-in router
+            nuxtApp.$router.push('/login');
+        }
+
+        return Promise.reject(error);
+    });
+
     nuxtApp.provide('api', api);
 })
