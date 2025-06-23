@@ -67,19 +67,31 @@
     <div class="flex-grow"></div>
 
     <!-- Logout -->
-    <NuxtLink class="items-center justify-center mx-auto" to="/login">
-      <button class="w-24 text-center px-4 py-1 rounded-lg bg-blue-600 text-white hover:bg-red-600 hover:text-white font-medium">
-        Logout
-      </button>
-    </NuxtLink>
+  <button
+    @click="handleLogout"
+    class="w-24 text-center px-4 py-1 rounded-lg bg-blue-600 text-white hover:bg-red-600 hover:text-white font-medium"
+  >
+    Logout
+  </button>
   </div>
 
 </div>
 
 </template>
 
-<script lang="ts" setup>
+<script setup>
+const router = useRouter()
+const { $api } = useNuxtApp()
 
+const handleLogout = async () => {
+  try {
+    await $api.post('/logout') // Assumes Axios baseURL is set
+    localStorage.removeItem('auth_token') // or any auth data you store
+    router.push('/login')
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
+}
 </script>
 
 <style>

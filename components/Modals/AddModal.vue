@@ -72,6 +72,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const { $api } = useNuxtApp()
+
 const props = defineProps({
   isOpen: Boolean,
 })
@@ -81,6 +83,8 @@ const emit = defineEmits(['close', 'save'])
 const description = ref('')
 const requirements = ref([{ name: '', score: '' }])
 const verification = ref('')
+const annex = ref('')
+const title = ref('')
 
 const closeModal = () => emit('close')
 
@@ -92,14 +96,24 @@ const removeRequirement = (index) => {
   requirements.value.splice(index, 1)
 }
 
-const saveCriteria = () => {
-  const payload = {
-    description: description.value,
-    requirements: requirements.value,
-    verification: verification.value,
+const saveCriteria = async () => {
+  try {
+    const payload = {
+      number: annex.value, // Assuming annex is the "number" field in Laravel
+      title: title.value,
+      description: description.value,
+      means_of_verification: verification.value,
+      criteria_function: 'criteria', // or whatever default you want
+    }
+
+    const response = await $api.post('/add', payload)
+    console.log('Success:', response.data)
+
+    emit('save', response.data.data) // return newly created data to parent
+    closeModal()
+  } catch (error) {
+    console.error('Failed to save criteria:', error)
   }
-  emit('save', payload)
-  closeModal()
 }
 </script>
 
