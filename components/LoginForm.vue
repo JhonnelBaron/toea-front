@@ -77,9 +77,39 @@ const passwordVisible = ref(false)
 const errorMessage = ref('')
 const isLoading = ref(false)
 
+// async function submitLogin() {
+//   errorMessage.value = ''
+//   isLoading.value = true
+//   try {
+//     const res = await $api.post('/login', {
+//       email: email.value,
+//       password: password.value,
+//     })
+
+//     const token = res.data.access_token
+//     localStorage.setItem('auth_token', token)
+
+//     router.push('/') // or wherever you want to go
+//   } catch (err) {
+//     if (err.response?.status === 403) {
+//       errorMessage.value = 'Please verify your email address first.'
+//     } else if (err.response?.status === 401) {
+//       errorMessage.value = 'Incorrect email or password.'
+//     } else if (err.response?.status === 404) {
+//       errorMessage.value = 'User not found.'
+//     } else {
+//       errorMessage.value = 'Something went wrong. Please try again.'
+//     }
+//   } finally {
+//     isLoading.value = false
+//   }
+// }
+import { useCookie } from '#app' // optional if using inside <script setup>
+
 async function submitLogin() {
   errorMessage.value = ''
   isLoading.value = true
+
   try {
     const res = await $api.post('/login', {
       email: email.value,
@@ -87,9 +117,20 @@ async function submitLogin() {
     })
 
     const token = res.data.access_token
-    localStorage.setItem('auth_token', token)
 
-    router.push('/') // or wherever you want to go
+    // ✅ Store the token in a cookie
+    const authToken = useCookie('auth_token', {
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    })
+
+    authToken.value = token
+
+    // Optional: Still store in localStorage if needed for Axios
+    // localStorage.setItem('auth_token', token)
+
+    router.push('/')
   } catch (err) {
     if (err.response?.status === 403) {
       errorMessage.value = 'Please verify your email address first.'
@@ -104,6 +145,7 @@ async function submitLogin() {
     isLoading.value = false
   }
 }
+
 </script>
 
 <style scoped>

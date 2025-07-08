@@ -83,15 +83,33 @@
 const router = useRouter()
 const { $api } = useNuxtApp()
 
+// const handleLogout = async () => {
+//   try {
+//     await $api.post('/logout') // Assumes Axios baseURL is set
+//     localStorage.removeItem('auth_token') // or any auth data you store
+//     router.push('/login')
+//   } catch (error) {
+//     console.error('Logout failed:', error)
+//   }
+// }
+
 const handleLogout = async () => {
   try {
-    await $api.post('/logout') // Assumes Axios baseURL is set
-    localStorage.removeItem('auth_token') // or any auth data you store
+    await $api.post('/logout') // optional; Laravel endpoint that invalidates token
+
+    // ✅ Remove token from cookie
+    const authToken = useCookie('auth_token')
+    authToken.value = null
+
+    // Optional: clear from localStorage too if you're using both
+    // localStorage.removeItem('auth_token')
+
     router.push('/login')
   } catch (error) {
     console.error('Logout failed:', error)
   }
 }
+
 </script>
 
 <style>
