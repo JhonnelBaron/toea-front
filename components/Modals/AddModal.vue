@@ -86,8 +86,19 @@ const verification = ref('')
 const annex = ref('')
 const title = ref('')
 
-const closeModal = () => emit('close')
+// const closeModal = () => emit('close')
+const closeModal = () => {
+  resetForm()
+  emit('close')
+}
 
+const resetForm = () => {
+  description.value = ''
+  requirements.value = [{ name: '', score: '' }]
+  verification.value = ''
+  annex.value = ''
+  title.value = ''
+}
 const addRequirement = () => {
   requirements.value.push({ name: '', score: '' })
 }
@@ -96,25 +107,53 @@ const removeRequirement = (index) => {
   requirements.value.splice(index, 1)
 }
 
+// const saveCriteria = async () => {
+//   try {
+//     const payload = {
+//       number: annex.value, // Assuming annex is the "number" field in Laravel
+//       title: title.value,
+//       description: description.value,
+//       means_of_verification: verification.value,
+//       criteria_function: 'criteria', // or whatever default you want
+
+      
+//     }
+
+//     const response = await $api.post('/add', payload)
+//     console.log('Success:', response.data)
+
+//     emit('save', response.data.data) // return newly created data to parent
+//     closeModal()
+//   } catch (error) {
+//     console.error('Failed to save criteria:', error)
+//   }
+// }
 const saveCriteria = async () => {
   try {
     const payload = {
-      number: annex.value, // Assuming annex is the "number" field in Laravel
+      number: annex.value,
       title: title.value,
       description: description.value,
       means_of_verification: verification.value,
-      criteria_function: 'criteria', // or whatever default you want
+      criteria_function: 'criteria',
+
+      // ✅ Send requirements using the expected backend key: aRequirements
+      aRequirements: requirements.value.map(req => ({
+        requirement_description: req.name,
+        point_value: parseFloat(req.score) || 0
+      }))
     }
 
     const response = await $api.post('/add', payload)
     console.log('Success:', response.data)
 
-    emit('save', response.data.data) // return newly created data to parent
+    emit('save', response.data.data)
     closeModal()
   } catch (error) {
     console.error('Failed to save criteria:', error)
   }
 }
+
 </script>
 
 <style scoped>

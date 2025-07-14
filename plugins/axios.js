@@ -41,6 +41,7 @@ import axios from 'axios';
 // import { useCookie } from '#app'
 
 export default defineNuxtPlugin((nuxtApp) => {
+  const router = useRouter()
   const api = axios.create({
     baseURL: 'http://127.0.0.1:8000/api',
     headers: {
@@ -61,7 +62,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   api.interceptors.response.use((response) => response, (error) => {
     if (error.response?.status === 401) {
       useCookie('auth_token').value = null
-      nuxtApp.$router.push('/login')
+      // nuxtApp.$router.push('/login')
+      router.push('/login') 
     }
     return Promise.reject(error)
   })
