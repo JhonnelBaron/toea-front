@@ -7,15 +7,22 @@
         </div>
   
       <!-- Table Section -->
-      <section class="bg-white rounded-lg">
-        <div>
+<section class="bg-white rounded-lg" v-for="(criteria, index) in criteriaList" :key="criteria.id">
+  <div>
     <div class="flex items-center gap-2">
-      <h2 class="text-xl font-semibold">A.1. Compliance to Zero Corruption Policy</h2>
+      <h2 class="text-xl font-semibold">
+        {{ criteria.number }}. {{ criteria.title }}
+      </h2>
       <EditCriteria />
       <EditTags :initialTags="selectedTags" @save="handleTagsSave" />
     </div>
 
-    <!-- Display selected tags under the title -->
+    <!-- Description -->
+    <p class="text-sm text-gray-600 my-2" v-if="criteria.description">
+      {{ criteria.description }}
+    </p>
+
+    <!-- Tags -->
     <div v-if="selectedTags.length" class="my-2 flex flex-wrap gap-2">
       <span
         v-for="tag in selectedTags"
@@ -26,196 +33,70 @@
       </span>
     </div>
   </div>
-        
-  
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm text-left border border-gray-200">
-            <thead class="bg-gray-100">
-              <tr class="bg-gray-200">
-                <th class="px-4 py-2">Requirements</th>
-                <th class="px-4 py-2">Score</th>
-                <th class="px-4 py-2">Means of Verification</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="">
-                <td class="px-4 py-2">No personnel with pending administrative case</td>
-                <td class="px-4 py-2">40</td>
-                <td class="px-4 py-2">Certification of no pending case</td>
-              </tr>
-              <tr class="">
-                <td class="px-4 py-2">At least one with pending case</td>
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <hr class="my-10 border-gray-500" />
-      </section>
-  
-      <section class="bg-white rounded-lg">
-        <div class="flex items-center">
-          <h2 class="text-xl font-semibold mb-2">A.2. Compliance to TESDA Code of Conduct and Ethical Standards</h2>
-          <EditCriteria />
-        </div>
-  
-        <ul class="list-disc pl-6 text-sm text-gray-700 mb-4 space-y-1">
-          <li>Fidelity to Duty</li>
-          <li>Conflict of Interest</li>
-          <li>Solicitation and Acceptance of Gifts</li>
-          <li>Outside Employment</li>
-          <li>Cronyism</li>
-          <li>Confidentiality</li>
-          <li>Post-employment</li>
-          <li>Procurement of Goods, Consulting Services, Infrastructure Projects</li>
-          <li>Reporting of Malpractices, Corruption, etc.</li>
-          <li>Complaints from 888, CSC, ISP findings</li>
-        </ul>
-  
-        <p class="text-xs text-gray-500 mb-4">
-          *Valid complaints are officially filed and verified by ACC/Investigation Committee.
-        </p>
-  
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm text-left border border-gray-200">
-            <thead class="bg-gray-200">
-              <tr>
-                <th class="px-4 py-2">Requirements</th>
-                <th class="px-4 py-2">Score</th>
-                <th class="px-4 py-2">Means of Verification</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="">
-                <td class="px-4 py-2">No personnel with pending administrative case</td>
-                <td class="px-4 py-2">40</td>
-                <td class="px-4 py-2">Certification of no pending case</td>
-              </tr>
-              <tr class="">
-                <td class="px-4 py-2">At least one with pending case</td>
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-<hr class="my-10 border-gray-500" />
-      </section>
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left border border-gray-200">
+      <thead class="bg-gray-100">
+        <tr class="bg-gray-200">
+          <th class="px-4 py-2">Requirements</th>
+          <th class="px-4 py-2">Score</th>
+          <th class="px-4 py-2">Means of Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr
+            v-for="(requirement, reqIndex) in criteria.a_requirements"
+            :key="requirement.id"
+          >
+            <td class="px-4 py-2">{{ requirement.requirement_description }}</td>
+            <td class="px-4 py-2">{{ requirement.point_value }}</td>
+            <td class="px-4 py-2">
+              <span v-if="reqIndex === 0">
+                {{ criteria.means_of_verification || 'N/A' }}
+              </span>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <section class="bg-white rounded-lg">
-        <div class="flex items-center">
-          <h2 class="text-xl font-semibold mb-2">A.2. Compliance to TESDA Code of Conduct and Ethical Standards</h2>
-          <EditCriteria />
-        </div>
-        
-  
-        <ul class="list-disc pl-6 text-sm text-gray-700 mb-4 space-y-1">
-          <li>Fidelity to Duty</li>
-          <li>Conflict of Interest</li>
-          <li>Solicitation and Acceptance of Gifts</li>
-          <li>Outside Employment</li>
-          <li>Cronyism</li>
-          <li>Confidentiality</li>
-          <li>Post-employment</li>
-          <li>Procurement of Goods, Consulting Services, Infrastructure Projects</li>
-          <li>Reporting of Malpractices, Corruption, etc.</li>
-          <li>Complaints from 888, CSC, ISP findings</li>
-        </ul>
-  
-        <p class="text-xs text-gray-500 mb-4">
-          *Valid complaints are officially filed and verified by ACC/Investigation Committee.
-        </p>
-  
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm text-left border border-gray-200">
-            <thead class="bg-gray-300">
-              <tr>
-                <th class="px-4 py-2">Requirements</th>
-                <th class="px-4 py-2">Score</th>
-                <th class="px-4 py-2">Means of Verification</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="">
-                <td class="px-4 py-2">No personnel with pending administrative case</td>
-                <td class="px-4 py-2">40</td>
-                <td class="px-4 py-2">Certification of no pending case</td>
-              </tr>
-              <tr class="">
-                <td class="px-4 py-2">At least one with pending case</td>
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-<hr class="my-10 border-gray-500" />
-      </section>
-
-      <section class="bg-white rounded-lg">
-        <div class="flex items-center">
-          <h2 class="text-xl font-semibold mb-2">A.2. Compliance to TESDA Code of Conduct and Ethical Standards</h2>
-          <EditCriteria />
-        </div>
-        
-  
-        <ul class="list-disc pl-6 text-sm text-gray-700 mb-4 space-y-1">
-          <li>Fidelity to Duty</li>
-          <li>Conflict of Interest</li>
-          <li>Solicitation and Acceptance of Gifts</li>
-          <li>Outside Employment</li>
-          <li>Cronyism</li>
-          <li>Confidentiality</li>
-          <li>Post-employment</li>
-          <li>Procurement of Goods, Consulting Services, Infrastructure Projects</li>
-          <li>Reporting of Malpractices, Corruption, etc.</li>
-          <li>Complaints from 888, CSC, ISP findings</li>
-        </ul>
-  
-        <p class="text-xs text-gray-500 mb-4">
-          *Valid complaints are officially filed and verified by ACC/Investigation Committee.
-        </p>
-  
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-sm text-left border border-gray-200">
-            <thead class="bg-gray-100">
-              <tr>
-                <th class="px-4 py-2">Requirements</th>
-                <th class="px-4 py-2">Score</th>
-                <th class="px-4 py-2">Means of Verification</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="">
-                <td class="px-4 py-2">No personnel with pending administrative case</td>
-                <td class="px-4 py-2">40</td>
-                <td class="px-4 py-2">Certification of no pending case</td>
-              </tr>
-              <tr class="">
-                <td class="px-4 py-2">At least one with pending case</td>
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-<hr class="my-10 border-gray-500" />
-      </section>
+  <hr class="my-10 border-gray-500" />
+</section>
     </div>
   </template>
   
   <script setup>
+  import { ref, onMounted } from 'vue'
+const { $api } = useNuxtApp()
   import EditCriteria from '../Buttons/EditCriteria.vue'; 
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
 
   const selectedTags = ref([])
+const criteriaList = ref([])
 
 const handleTagsSave = (tags) => {
   selectedTags.value = tags
 }
+
+const fetchCriterias = async () => {
+  try {
+    const res = await $api.get('/get-all')
+    if (res.data.status === 200) {
+      criteriaList.value = res.data.data
+    }
+  } catch (error) {
+    console.error('Error fetching criteria:', error)
+  }
+}
+
+onMounted(() => {
+  fetchCriterias()
+})
+
+
+
 
   </script>
 
