@@ -7,7 +7,7 @@
       <CriteriaNavigator :activeTab="activeTab" @tab-change="activeTab = $event" />
       <!-- Tab Content -->
       <section class="flex-1 bg-gray-600 flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto"> 
-        <component :is="getComponent(activeTab)" :key="activeTab" />
+        <component :is="getComponent(activeTab)" :key="activeTab" :activeTab="activeTab" />
       </section>
     </div>
     
