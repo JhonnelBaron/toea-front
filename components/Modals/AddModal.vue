@@ -76,7 +76,6 @@ const { $api } = useNuxtApp()
 
 const props = defineProps({
   isOpen: Boolean,
-   activeTab: String,
 })
 
 const emit = defineEmits(['close', 'save'])
@@ -108,23 +107,29 @@ const removeRequirement = (index) => {
   requirements.value.splice(index, 1)
 }
 
-const getApiEndpoint = () => {
- switch (props.activeTab) {
-    case 'A':
-      return '/add'
-    case 'B':
-      return '/add-b'
-    default:
-      return '/add' // Default endpoint if no active tab is specified
-  }
-}
+// const saveCriteria = async () => {
+//   try {
+//     const payload = {
+//       number: annex.value, // Assuming annex is the "number" field in Laravel
+//       title: title.value,
+//       description: description.value,
+//       means_of_verification: verification.value,
+//       criteria_function: 'criteria', // or whatever default you want
 
+      
+//     }
+
+//     const response = await $api.post('/add', payload)
+//     console.log('Success:', response.data)
+
+//     emit('save', response.data.data) // return newly created data to parent
+//     closeModal()
+//   } catch (error) {
+//     console.error('Failed to save criteria:', error)
+//   }
+// }
 const saveCriteria = async () => {
   try {
-    const tabKey = props.activeTab?.toLowerCase() || 'a'
-    const requirementsKey = `${tabKey}Requirements`
-
-
     const payload = {
       number: annex.value,
       title: title.value,
@@ -133,15 +138,13 @@ const saveCriteria = async () => {
       criteria_function: 'criteria',
 
       // ✅ Send requirements using the expected backend key: aRequirements
-      [requirementsKey]: requirements.value.map(req => ({
+      aRequirements: requirements.value.map(req => ({
         requirement_description: req.name,
         point_value: parseFloat(req.score) || 0
       }))
     }
 
-    // const response = await $api.post('/add', payload)
-    const endpoint = getApiEndpoint()
-    const response = await $api.post(endpoint, payload)
+    const response = await $api.post('/add', payload)
     console.log('Success:', response.data)
 
     emit('save', response.data.data)

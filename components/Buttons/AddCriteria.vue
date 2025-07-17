@@ -7,16 +7,13 @@
       Add Criteria
     </button>
 
-    <AddModal :isOpen="showModal" :activeTab="activeTab" @close="showModal = false" @save="handleSave" />
+    <AddModal :isOpen="showModal" @close="showModal = false" @save="handleSave" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import AddModal from '../Modals/AddModal.vue'
-const props = defineProps({
-  activeTab: String
-})
 
 const showModal = ref(false)
 
