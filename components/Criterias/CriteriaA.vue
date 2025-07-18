@@ -3,7 +3,7 @@
       <!-- Section Header -->
         <div class="flex justify-between items-center text-2xl font-bold text-gray-800 mb-6">
             <div>A. Good Governance Measures</div>
-            <AddCriteria />
+            <AddCriteria :activeTab="activeTab"/>
         </div>
   
       <!-- Table Section -->
@@ -72,6 +72,10 @@ const { $api } = useNuxtApp()
   import EditCriteria from '../Buttons/EditCriteria.vue'; 
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
+    const { activeTab } = defineProps({
+  activeTab: String
+})
+
 
   const selectedTags = ref([])
 const criteriaList = ref([])
