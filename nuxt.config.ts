@@ -8,4 +8,11 @@ export default defineNuxtConfig({
     '~/plugins/axios.js',
   
   ],
+    app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/toea.png' }
+      ]
+    }
+  }
 })
