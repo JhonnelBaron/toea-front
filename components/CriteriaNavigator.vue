@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white text-white p-4 rounded-lg shadow-md flex flex-row gap-4 mt-4 mr-4">
+  <div class="bg-white text-white p-4 rounded-lg shadow-md flex flex-row gap-4 mt-4 mr-4 border-b-4 border-blue-500">
     <div
       v-for="tab in tabs"
       :key="tab.name"

@@ -12,10 +12,11 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        spartan: ['"League Spartan"', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'], // 👈 Replace 'spartan' with 'sans'
       },
     },
   },
   plugins: [],
 }
+
 export default config

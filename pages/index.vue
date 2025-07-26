@@ -5,21 +5,21 @@
     <div class="flex-1 bg-blue-200 flex flex-col">
       <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
 
-        <div class="bg-white p-4 rounded-lg w-1/5 min-w-[150px] h-full flex flex-col justify-between">
+        <div class="bg-white p-4 rounded-lg w-1/5 min-w-[150px] h-full flex flex-col justify-between border-b-4 border-red-500">
           <p class="text-sm font-medium">Total number of Nominees</p>
           <div class="font-bold text-7xl text-end">143</div>
         </div>
 
-        <div class="bg-white p-4 rounded-lg flex-1 h-full flex flex-col justify-start">
-          <p class="text-sm font-medium mb-2">2024  Winners</p>
+        <div class="bg-white p-4 rounded-lg flex-1 h-full flex flex-col justify-start border-b-4 border-green-800">
+          <p class="text-sm font-medium mb-2">2024 Winners</p>
           <ul class="space-y-1 flex-grow">
             <li class="font-light text-md border-b">TESDA Central Office</li>
-            <li class="font-light text-md border-b">TESDA Nueva Ecija Provincial Office</li>
+            <li class="font-light text-md border-b">    TESDA Nueva Ecija Provincial Office</li>
             <li class="font-light text-md border-b">TESDA Nueva Ecija Provincial Office</li>
           </ul>
         </div>
 
-        <div class="bg-white p-4 rounded-lg w-1/4 min-w-[200px] text-end h-full flex flex-col justify-between">
+        <div class="bg-white p-4 rounded-lg w-1/4 min-w-[200px] text-end h-full flex flex-col justify-between border-b-4 border-orange-500">
           <p class="text-sm font-medium">Time and Date</p>
           <div>
             <div class="text-5xl font-bold">{{ currentTime }}</div>
@@ -29,7 +29,7 @@
 
       </div>
 
-      <section class="flex-1 bg-gray-100 flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto">
+      <section class="flex-1 bg-white flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto border-b-4 border-blue-600">
         <div class="p-10 text-4xl font-semibold">Welcome to the TOEA</div>
       </section>
     </div>

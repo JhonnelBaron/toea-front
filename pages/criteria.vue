@@ -6,7 +6,8 @@
       <!-- Tab Header -->
       <CriteriaNavigator :activeTab="activeTab" @tab-change="activeTab = $event" />
       <!-- Tab Content -->
-      <section class="flex-1 bg-gray-600 flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto"> 
+      <!-- break-all = used for wrapping the text -->
+      <section class="flex-1 bg-gray-600 flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto whitespace-pre-wrap break-all  border-b-4 border-blue-600"> 
         <component :is="getComponent(activeTab)" :key="activeTab" :activeTab="activeTab"/>
       </section>
     </div>

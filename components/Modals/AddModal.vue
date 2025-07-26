@@ -4,6 +4,21 @@
 
       <!-- Modal Wrapper -->
       <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-screen overflow-y-auto p-6 space-y-4 relative">
+        <transition name="fade">
+          <div
+            v-if="showSuccess"
+            class="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-lg z-10"
+          >
+            <div class="flex flex-col items-center space-y-2">
+              <!-- Green Circle with Check -->
+              <div class="h-16 w-16 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl shadow-md">
+                ✓
+              </div>
+              <p class="text-green-700 text-lg font-semibold">Criteria Added Successfully!</p>
+            </div>
+          </div>
+        </transition>
+        
         <!-- Close Button -->
         <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-black text-2xl leading-none">
           &times;
@@ -62,8 +77,37 @@
 
         <!-- Save Button -->
         <div class="text-right">
-          <button @click="saveCriteria" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm">Save</button>
-        </div>
+  <button
+  @click="saveCriteria"
+  :disabled="isSaving || !isFormValid"
+  class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+>
+  <svg
+    v-if="isSaving"
+    class="animate-spin h-4 w-4 text-white"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      class="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      stroke-width="4"
+    />
+    <path
+      class="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+    />
+  </svg>
+  <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
+</button>
+
+</div>
+
       </div>
     </div>
   </transition>
@@ -125,7 +169,10 @@ const getApiEndpoint = () => {
   }
 }
 
+const isSaving = ref(false)
+
 const saveCriteria = async () => {
+  isSaving.value = true
   try {
     const tabKey = props.activeTab?.toLowerCase() || 'a'
     const requirementsKey = `${tabKey}Requirements`
@@ -136,26 +183,47 @@ const saveCriteria = async () => {
       description: description.value,
       means_of_verification: verification.value,
       criteria_function: 'criteria',
-
-      // ✅ Send requirements using the expected backend key: aRequirements
       [requirementsKey]: requirements.value.map(req => ({
         requirement_description: req.name,
         point_value: parseFloat(req.score) || 0
       }))
     }
 
-    // const response = await $api.post('/add', payload)
     const endpoint = getApiEndpoint()
     const response = await $api.post(endpoint, payload)
     console.log('Success:', response.data)
 
     emit('save', response.data.data)
-    closeModal()
+
+    // ✅ Show success message
+    showSuccess.value = true
+
+    // ✅ Wait for 1.5s then close modal smoothly
+    setTimeout(() => {
+      showSuccess.value = false
+      closeModal()
+    }, 1500)
   } catch (error) {
     console.error('Failed to save criteria:', error)
+  } finally {
+    isSaving.value = false
   }
 }
 
+
+import { computed } from 'vue'
+
+const isFormValid = computed(() => {
+  const hasAnnex = annex.value.trim() !== ''
+  const hasTitle = title.value.trim() !== ''
+  const hasValidRequirements = requirements.value.length > 0 && requirements.value.every(
+    req => req.name.trim() !== '' && req.score !== ''
+  )
+
+  return hasAnnex && hasTitle && hasValidRequirements
+})
+
+const showSuccess = ref(false)
 </script>
 
 <style scoped>

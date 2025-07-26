@@ -15,6 +15,7 @@
       </h2>
       <EditCriteria />
       <EditTags :initialTags="selectedTags" @save="handleTagsSave" />
+      <DeleteCriteria />
     </div>
 
     <!-- Description -->
@@ -68,11 +69,13 @@
   
   <script setup>
   import { ref, onMounted } from 'vue'
-const { $api } = useNuxtApp()
   import EditCriteria from '../Buttons/EditCriteria.vue'; 
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
-    const { activeTab } = defineProps({
+  import DeleteCriteria from '../Buttons/DeleteCriteria.vue';
+  
+  const { $api } = useNuxtApp()
+  const { activeTab } = defineProps({
   activeTab: String
 })
 
@@ -99,9 +102,12 @@ onMounted(() => {
   fetchCriterias()
 })
 
+const showDeleteModal = ref(false)
 
-
-
+const deleteItem = () => {
+  // your delete logic here
+  console.log('Item deleted!')
+}
   </script>
 
 <style>
