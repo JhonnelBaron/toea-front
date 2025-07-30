@@ -4,6 +4,22 @@
 
       <!-- Modal Wrapper -->
       <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-screen overflow-y-auto p-6 space-y-4 relative">
+        
+        <!-- ✅ Success Overlay -->
+        <transition name="fade">
+          <div
+            v-if="showSuccess"
+            class="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-lg z-10"
+          >
+            <div class="flex flex-col items-center space-y-2">
+              <div class="h-16 w-16 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl shadow-md">
+                ✓
+              </div>
+              <p class="text-green-700 text-lg font-semibold">Criteria Saved Successfully!</p>
+            </div>
+          </div>
+        </transition>
+
         <!-- Close Button -->
         <button @click="closeModal" class="absolute top-2 right-2 text-gray-400 hover:text-black text-2xl leading-none">
           &times;
@@ -13,7 +29,7 @@
         <h2 class="text-xl font-bold">Edit Criteria</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          <!-- Annex: 1/3 width -->
+          <!-- Annex -->
           <div class="md:col-span-1">
             <label class="block text-sm font-medium text-gray-700">Annex</label>
             <input
@@ -24,7 +40,7 @@
             />
           </div>
 
-          <!-- Title: 2/3 width -->
+          <!-- Title -->
           <div class="md:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Title</label>
             <input
@@ -36,11 +52,10 @@
           </div>
         </div>
 
-
         <!-- Description -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Description (Optional)</label>
-          <textarea type="text" v-model="description" class="mt-1 w-full border rounded px-3 py-2 text-sm" placeholder="Enter description..."></textarea>
+          <textarea v-model="description" class="mt-1 w-full border rounded px-3 py-2 text-sm" placeholder="Enter description..."></textarea>
         </div>
 
         <!-- Requirements -->
@@ -62,16 +77,32 @@
 
         <!-- Save Button -->
         <div class="text-right">
-          <button @click="saveCriteria" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm">Save</button>
+          <button
+            @click="saveCriteria"
+            :disabled="isSaving || !isFormValid"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <svg
+              v-if="isSaving"
+              class="animate-spin h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+            <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
+          </button>
         </div>
+
       </div>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 const { $api } = useNuxtApp()
 
 const props = defineProps({
@@ -88,17 +119,51 @@ const description = ref('')
 const requirements = ref([{ name: '', score: '' }])
 const verification = ref('')
 
-// const populateForm = (data) => {
-//   annex.value = data.number || ''
-//   title.value = data.title || ''
-//   description.value = data.description || ''
-//   verification.value = data.means_of_verification || ''
-//   requirements.value = data.requirements?.map(req => ({
-//     name: req.requirement_description || '',
-//     score: req.point_value || ''
-//   })) || [{ name: '', score: '' }]
- 
-// }
+const isSaving = ref(false)
+const showSuccess = ref(false)
+
+const isFormValid = computed(() => {
+  const hasAnnex = annex.value.trim() !== ''
+  const hasTitle = title.value.trim() !== ''
+  const hasValidRequirements = requirements.value.length > 0 &&
+    requirements.value.every(req => req.name.trim() !== '' && req.score !== '')
+  return hasAnnex && hasTitle && hasValidRequirements
+})
+
+const closeModal = () => {
+  emit('close')
+}
+
+const addRequirement = () => {
+  requirements.value.push({ name: '', score: '' })
+}
+
+const removeRequirement = (index) => {
+  requirements.value.splice(index, 1)
+}
+
+const getApiEndpoint = (tab, id) => {
+  switch (tab) {
+    case 'A': return `/get-criteria/${id}`
+    case 'B': return `/get-criteria-b/${id}`
+    case 'C': return `/get-criteria-c/${id}`
+    case 'D': return `/get-criteria-d/${id}`
+    case 'E': return `/get-criteria-e/${id}`
+    default: return `/get-criteria/${id}`
+  }
+}
+
+const getUpdateEndpoint = (tab, id) => {
+  switch (tab) {
+    case 'A': return `/update/${id}`
+    case 'B': return `/update-b/${id}`
+    case 'C': return `/update-c/${id}`
+    case 'D': return `/update-d/${id}`
+    case 'E': return `/update-e/${id}`
+    default: return `/update/${id}`
+  }
+}
+
 const getRequirementsKey = (tab) => {
   switch (tab) {
     case 'A': return 'a_requirements'
@@ -146,29 +211,9 @@ watch(
   { immediate: true }
 )
 
-
-const closeModal = () => emit('close')
-
-const addRequirement = () => {
-  requirements.value.push({ name: '', score: '' })
-}
-
-const removeRequirement = (index) => {
-  requirements.value.splice(index, 1)
-}
-
-const getApiEndpoint = (tab, id) => {
- switch (tab) {
-    case 'A': return `/get-criteria/${id}`
-    case 'B': return `/get-criteria-b/${id}`
-    case 'C': return `/get-criteria-c/${id}`
-    case 'D': return `/get-criteria-d/${id}`
-    case 'E': return `/get-criteria-e/${id}`
-    default: return `/get-criteria/${id}`
-  }
-}
-
 const saveCriteria = async () => {
+  isSaving.value = true
+
   const payload = {
     title: title.value,
     number: annex.value,
@@ -182,23 +227,18 @@ const saveCriteria = async () => {
   try {
     await $api.post(updateEndpoint, payload)
     emit('save', payload)
-    closeModal()
+
+    showSuccess.value = true
+    setTimeout(() => {
+      showSuccess.value = false
+      closeModal()
+    }, 1500)
   } catch (error) {
     console.error('Failed to update criteria:', error)
+  } finally {
+    isSaving.value = false
   }
 }
-
-const getUpdateEndpoint = (tab, id) => {
-  switch (tab) {
-    case 'A': return `/update/${id}`
-    case 'B': return `/update-b/${id}`
-    case 'C': return `/update-c/${id}`
-    case 'D': return `/update-d/${id}`
-    case 'E': return `/update-e/${id}`
-    default: return `/update/${id}`
-  }
-}
-
 </script>
 
 <style scoped>
@@ -210,7 +250,6 @@ const getUpdateEndpoint = (tab, id) => {
 .fade-leave-to {
   opacity: 0;
 }
-/* Optional scrollbar hide (WebKit browsers only) */
 ::-webkit-scrollbar {
   width: 6px;
 }
