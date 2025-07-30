@@ -6,14 +6,21 @@
 
   <EditModal
     :isOpen="showModal"
+    :activeTab="activeTab"
+    :criteriaId="criteriaId"
     @close="showModal = false"
     @save="handleSave"
   />
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import EditModal from '../Modals/EditModal.vue'
+
+const props = defineProps({
+  activeTab: String,
+  criteriaId: Number
+})
 
 const showModal = ref(false)
 

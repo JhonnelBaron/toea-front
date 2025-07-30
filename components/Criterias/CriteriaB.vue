@@ -13,7 +13,8 @@
           <h2 class="text-xl font-semibold">
             {{ criteria.number }}. {{ criteria.title }}
           </h2>
-          <EditCriteria />
+      <EditCriteria :criteriaId="criteria.id"
+  :activeTab="activeTab"/>
           <EditTags :initialTags="selectedTags" @save="handleTagsSave" />
         </div>
 

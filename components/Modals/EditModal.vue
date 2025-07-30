@@ -71,16 +71,81 @@
 
 <script setup>
 import { ref } from 'vue'
+import { watch } from 'vue'
+const { $api } = useNuxtApp()
 
 const props = defineProps({
   isOpen: Boolean,
+  activeTab: String,
+  criteriaId: Number
 })
 
 const emit = defineEmits(['close', 'save'])
 
+const annex = ref('')
+const title = ref('')
 const description = ref('')
 const requirements = ref([{ name: '', score: '' }])
 const verification = ref('')
+
+// const populateForm = (data) => {
+//   annex.value = data.number || ''
+//   title.value = data.title || ''
+//   description.value = data.description || ''
+//   verification.value = data.means_of_verification || ''
+//   requirements.value = data.requirements?.map(req => ({
+//     name: req.requirement_description || '',
+//     score: req.point_value || ''
+//   })) || [{ name: '', score: '' }]
+ 
+// }
+const getRequirementsKey = (tab) => {
+  switch (tab) {
+    case 'A': return 'a_requirements'
+    case 'B': return 'b_requirements'
+    case 'C': return 'c_requirements'
+    case 'D': return 'd_requirements'
+    case 'E': return 'e_requirements'
+    default: return 'a_requirements'
+  }
+}
+
+const populateForm = (data) => {
+  annex.value = data.number || ''
+  title.value = data.title || ''
+  description.value = data.description || ''
+  verification.value = data.means_of_verification || ''
+
+  const reqKey = getRequirementsKey(props.activeTab)
+  const rawReqs = data[reqKey] || []
+
+  requirements.value = rawReqs.map(req => ({
+    name: req.requirement_description || '',
+    score: req.point_value || ''
+  }))
+}
+
+watch(
+  () => [props.isOpen, props.criteriaId],
+  async ([isOpen, id]) => {
+    if (isOpen && id) {
+      try {
+        const endpoint = getApiEndpoint(props.activeTab, id)
+        const res = await $api.get(endpoint)
+
+        if (res.data.status === 200) {
+          populateForm(res.data.data)
+        } else {
+          console.error('Failed to fetch criteria data:', res.data.message)
+        }
+      } catch (error) {
+        console.error('Error fetching criteria data:', error)
+      }
+    }
+  },
+  { immediate: true }
+)
+
 
 const closeModal = () => emit('close')
 
@@ -92,15 +157,48 @@ const removeRequirement = (index) => {
   requirements.value.splice(index, 1)
 }
 
-const saveCriteria = () => {
+const getApiEndpoint = (tab, id) => {
+ switch (tab) {
+    case 'A': return `/get-criteria/${id}`
+    case 'B': return `/get-criteria-b/${id}`
+    case 'C': return `/get-criteria-c/${id}`
+    case 'D': return `/get-criteria-d/${id}`
+    case 'E': return `/get-criteria-e/${id}`
+    default: return `/get-criteria/${id}`
+  }
+}
+
+const saveCriteria = async () => {
   const payload = {
+    title: title.value,
+    number: annex.value,
     description: description.value,
     requirements: requirements.value,
-    verification: verification.value,
+    means_of_verification: verification.value,
   }
-  emit('save', payload)
-  closeModal()
+
+  const updateEndpoint = getUpdateEndpoint(props.activeTab, props.criteriaId)
+
+  try {
+    await $api.post(updateEndpoint, payload)
+    emit('save', payload)
+    closeModal()
+  } catch (error) {
+    console.error('Failed to update criteria:', error)
+  }
 }
+
+const getUpdateEndpoint = (tab, id) => {
+  switch (tab) {
+    case 'A': return `/update/${id}`
+    case 'B': return `/update-b/${id}`
+    case 'C': return `/update-c/${id}`
+    case 'D': return `/update-d/${id}`
+    case 'E': return `/update-e/${id}`
+    default: return `/update/${id}`
+  }
+}
+
 </script>
 
 <style scoped>

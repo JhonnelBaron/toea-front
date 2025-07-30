@@ -11,7 +11,8 @@
         <div>
     <div class="flex items-center gap-2">
       <h2 class="text-xl font-semibold">A.1. Compliance to Zero Corruption Policy</h2>
-      <EditCriteria />
+      <EditCriteria   :criteriaId="item.id"
+  :activeTab="activeTab"/>
       <EditTags :initialTags="selectedTags" @save="handleTagsSave" />
     </div>
 
