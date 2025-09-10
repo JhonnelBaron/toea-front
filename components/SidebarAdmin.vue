@@ -89,7 +89,7 @@
               ]"
             >
               <img src="/images/gpIcon.svg" alt="Office" class="w-4 h-4" />
-              Best Regional Office
+              Galing Probinsya
             </button>
           </NuxtLink>
 
@@ -101,7 +101,7 @@
               ]"
             >
               <img src="/images/bestIcon.svg" alt="Office" class="w-4 h-4" />
-              Best Regional Office
+              Best Training Institution
             </button>
           </NuxtLink>  
 

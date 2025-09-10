@@ -11,6 +11,7 @@
 
 <!-- Search input -->
     <input
+    v-model="searchQuery"
     type="text"
     placeholder="Search criteria..."
     class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-64"
@@ -23,7 +24,7 @@
 
   
       <!-- Table Section -->
-<section class="bg-gray-100 rounded-lg p-4 border border-gray-400 border-b-gray-400 border-b-4" v-for="(criteria, index) in criteriaList" :key="criteria.id">
+<section class="bg-gray-100 rounded-lg p-4 border border-gray-400 border-b-gray-400 border-b-4" v-for="criteria in filteredCriteria" :key="criteria.id">
   <div>
     <div class="flex items-center gap-2">
       <h2 class="text-md font-semibold">
@@ -140,20 +141,6 @@ const getTagsForCriteria = (criteria) => {
   return Array.isArray(tags) ? tags : []   // ✅ ensures it’s always an array
 }
 
-// const handleTagsSave = (tags) => {
-//   selectedTags.value = tags
-// }
-
-// const handleTagsSave = (criteriaId, updatedCriteria) => {
-//   // update tags map based on new backend data
-//   selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
-
-//   // also update criteriaList so table reflects changes
-//   const index = criteriaList.value.findIndex(c => c.id === criteriaId)
-//   if (index !== -1) {
-//     criteriaList.value[index] = updatedCriteria
-//   }
-// }
 const handleTagsSave = (criteriaId, updatedCriteria) => {
   const index = criteriaList.value.findIndex(c => c.id === criteriaId)
   if (index !== -1) {
@@ -171,7 +158,17 @@ const handleTagsSave = (criteriaId, updatedCriteria) => {
   })
 }
 
+const searchQuery = ref("")
 
+// computed filtered list
+const filteredCriteria = computed(() => {
+  if (!searchQuery.value) return criteriaList.value
+  return criteriaList.value.filter(c =>
+    c.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    c.number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    (c.description && c.description.toLowerCase().includes(searchQuery.value.toLowerCase()))
+  )
+})
 
 const fetchCriterias = async () => {
   try {
