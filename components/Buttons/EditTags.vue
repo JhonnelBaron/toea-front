@@ -4,6 +4,8 @@ import CategoryTags from '../Modals/CategoryTags.vue'
 
 const props = defineProps({
   initialTags: Array,
+  criteriaId: Number,       // 👈 add this
+  activeTab: String,        // 👈 add this (values: 'A', 'B', 'C', 'D', 'E')
 })
 
 const emit = defineEmits(['save'])
@@ -12,7 +14,7 @@ const showModal = ref(false)
 const tags = ref([])
 
 watch(() => props.initialTags, (newTags) => {
-  tags.value = [...newTags]
+  tags.value =  Array.isArray(newTags) ? [...newTags] : [] 
 }, { immediate: true })
 
 const handleSave = (data) => {
@@ -28,6 +30,8 @@ const handleSave = (data) => {
 
   <CategoryTags
     :isOpen="showModal"
+    :criteriaId="criteriaId"   
+    :activeTab="activeTab"   
     @close="showModal = false"
     @save="handleSave"
     :initialTags="tags"

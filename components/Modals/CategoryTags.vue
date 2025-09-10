@@ -1,5 +1,3 @@
-
-
 <template>
   <transition name="fade">
   <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
@@ -10,7 +8,7 @@
         <!-- Available Tags -->
         <div>
           <h3 class="font-medium mb-2">Available Tags</h3>
-          <draggable v-model="availableTags" group="tags" class="min-h-[150px] border p-3 rounded bg-blue-200 space-y-2">
+          <draggable v-model="availableTags" itemKey="element" group="tags" class="min-h-[150px] border p-3 rounded bg-blue-200 space-y-2">
             <template #item="{ element }">
               <div
                 :class="[
@@ -28,7 +26,7 @@
         <!-- Selected Tags -->
         <div>
           <h3 class="font-medium mb-2">Selected Tags</h3>
-          <draggable v-model="selectedTags" group="tags" class="min-h-[150px] border p-3 rounded bg-green-200 space-y-2">
+          <draggable v-model="selectedTags" group="tags" itemKey="element" class="min-h-[150px] border p-3 rounded bg-green-200 space-y-2">
             <template #item="{ element }">
               <div
                 :class="[
@@ -74,14 +72,34 @@
 <script setup>
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
-
+const { $api } = useNuxtApp()
 
 const props = defineProps({
   isOpen: Boolean,
   initialTags: Array,
+    activeTab: {
+    type: String,
+    required: true
+  },
+  criteriaId: {
+    type: Number,
+    required: true
+  }
 })
 
 const emit = defineEmits(['close', 'save'])
+
+const tagToFieldMap = {
+  'BRO - Small': 'bro_small',
+  'BRO - Medium': 'bro_medium',
+  'BRO - Large': 'bro_large',
+  'GP - Small': 'gp_small',
+  'GP - Medium': 'gp_medium',
+  'GP - Large': 'gp_large',
+  'BTI - RTC/STC': 'bti_rtcstc',
+  'BTI - PTC': 'bti_ptcdtc',
+  'BTI - TAS': 'bti_tas',
+}
 
 const availableTags = ref([
   'BRO - Small',
@@ -133,11 +151,54 @@ const moveSelectedToLeft = () => {
 }
 
 const closeModal = () => emit('close')
-
-const saveTags = () => {
-  emit('save', selectedTags.value)
-  closeModal()
+const getTagApiEndpoint = (id) => {
+  switch (props.activeTab) {
+    case 'A':
+      return `/tags-a/${id}`
+    case 'B':
+      return `/tags-b/${id}`
+    case 'C':
+      return `/tags-c/${id}`
+    case 'D':
+      return `/tags-d/${id}`
+    case 'E':
+      return `/tags-e/${id}`
+    default:
+      return `/tags-a/${id}` // fallback
+  }
 }
+const isSavingTags = ref(false)
+
+const saveTags = async () => {
+  isSavingTags.value = true
+  try {
+    // Map selected tags to DB fields
+    const fields = selectedTags.value.map(tag => tagToFieldMap[tag]).filter(Boolean)
+
+    // Get correct API endpoint based on activeTab
+    const endpoint = getTagApiEndpoint(props.criteriaId)
+
+    const response = await $api.post(endpoint, { fields })
+
+    console.log('Tags updated successfully:', response.data)
+
+    emit('save', response.data.data)
+
+    // ✅ Close modal after short delay
+    setTimeout(() => {
+      closeModal()
+    }, 500)
+  } catch (error) {
+    console.error('Failed to save tags:', error)
+  } finally {
+    isSavingTags.value = false
+  }
+}
+
+// const saveTags = () => {
+//   emit('save', selectedTags.value)
+//   closeModal()
+// }
 </script>
 
 <style scoped>

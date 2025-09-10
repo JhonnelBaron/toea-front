@@ -15,7 +15,12 @@
           </h2>
       <EditCriteria :criteriaId="criteria.id"
   :activeTab="activeTab"/>
-          <EditTags :initialTags="selectedTags" @save="handleTagsSave" />
+         <EditTags
+        :initialTags="getTagsForCriteria(criteria)"
+        :criteriaId="criteria.id"
+        :activeTab="activeTab"
+        @save="(tags) => handleTagsSave(criteria.id, tags)"
+        />
         </div>
 
         <!-- Description -->
@@ -24,9 +29,9 @@
         </p>
 
         <!-- Tags -->
-        <div v-if="selectedTags.length" class="my-2 flex flex-wrap gap-2">
+        <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
           <span
-            v-for="tag in selectedTags"
+            v-for="tag in getTagsForCriteria(criteria)"
             :key="tag"
             class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-500"
           >
@@ -68,20 +73,53 @@
   </template>
   
   <script setup>
-    import { ref, onMounted } from 'vue'
-  const { $api } = useNuxtApp()
+  import { ref, onMounted } from 'vue'
   import EditCriteria from '../Buttons/EditCriteria.vue'; 
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
+
+    const { $api } = useNuxtApp()
     const { activeTab } = defineProps({
   activeTab: String
 })
 
-  const selectedTags = ref([])
+const mapCriteriaToTags = (criteria) => {
+  const tags = []
+
+  if (criteria.bro_small) tags.push('BRO - Small')
+  if (criteria.bro_medium) tags.push('BRO - Medium')
+  if (criteria.bro_large) tags.push('BRO - Large')
+  if (criteria.gp_small) tags.push('GP - Small')
+  if (criteria.gp_medium) tags.push('GP - Medium')
+  if (criteria.gp_large) tags.push('GP - Large')
+  if (criteria.bti_rtcstc) tags.push('BTI - RTC/STC')
+  if (criteria.bti_ptcdtc) tags.push('BTI - PTC')
+  if (criteria.bti_tas) tags.push('BTI - TAS')
+
+  return tags
+}
+
+
+  const selectedTagsMap = ref([])
 const criteriaList = ref([])
 
-const handleTagsSave = (tags) => {
-  selectedTags.value = tags
+const getTagsForCriteria = (criteria) => {
+  const tags = selectedTagsMap.value[criteria.id]
+  return Array.isArray(tags) ? tags : []   // ✅ ensures it’s always an array
+}
+// const handleTagsSave = (tags) => {
+//   selectedTags.value = tags
+// }
+
+const handleTagsSave = (criteriaId, updatedCriteria) => {
+  // update tags map based on new backend data
+  selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
+
+  // also update criteriaList so table reflects changes
+  const index = criteriaList.value.findIndex(c => c.id === criteriaId)
+  if (index !== -1) {
+    criteriaList.value[index] = updatedCriteria
+  }
 }
 
 const fetchCriterias = async () => {
@@ -89,6 +127,12 @@ const fetchCriterias = async () => {
     const res = await $api.get('/get-all-c')
     if (res.data.status === 200) {
       criteriaList.value = res.data.data
+
+                  criteriaList.value.forEach(criteria => {
+        if (!selectedTagsMap.value[criteria.id]) {
+          selectedTagsMap.value[criteria.id] = mapCriteriaToTags(criteria)
+                  }
+      })
     }
   } catch (error) {
     console.error('Error fetching criteria:', error)
