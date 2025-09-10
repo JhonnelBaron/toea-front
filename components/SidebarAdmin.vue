@@ -1,6 +1,6 @@
 <template>
   <!-- Floating Sidebar -->
-  <div class="w-72 h-screen bg-blue-200 shadow-lg p-4 flex flex-col justify-between">
+  <div class="w-60 h-screen bg-blue-200 shadow-lg p-4 flex flex-col justify-between">
     <!-- Logging Out Overlay -->
 <transition name="fade">
   <div
@@ -33,14 +33,14 @@
         alt="Profile"
         class="w-24 h-24 rounded-full object-cover border-4 border-gray-300 mb-4"
       />
-      <h2 class="text-xl font-bold text-gray-800 font-sans">George A. Nuñez</h2>
-      <p class="text-sm text-gray-600">Project Support Staff II</p>
+      <h2 class="text-xm font-bold text-gray-800 font-sans">George A. Nuñez</h2>
+      <p class="text-xs text-gray-600">Project Support Staff II</p>
       <p class="text-xs text-gray-500">TESDA Central Office</p>
     </div>
 
     <!-- Bottom Section (Tabs + Logout) -->
-    <div class="bg-white rounded-2xl shadow-lg p-4 flex flex-col h-full flex-grow mt-4 border-b-4 border-blue-600">
-      <div class="flex flex-col gap-3 mt-6">
+    <div class="bg-white rounded-2xl shadow-lg p-3 flex flex-col h-full flex-grow mt-4 border-b-4 border-blue-600">
+      <div class="flex flex-col gap-3 mt-3">
         <!-- Home -->
         <NuxtLink to="/">
           <button
@@ -69,18 +69,42 @@
 
         <!-- Sub-tabs -->
         <div class="flex flex-col gap-2 pl-6">
-          <button class="text-left px-3 py-2 rounded-md hover:bg-gray-300 text-gray-600 text-xs flex items-center gap-2">
-            <img src="/images/broIcon.svg" alt="Office" class="w-4 h-4" />
-            Best Regional Office
-          </button>
-          <button class="text-left px-3 py-2 rounded-md hover:bg-gray-300 text-gray-600 text-xs flex items-center gap-2">
-            <img src="/images/gpIcon.svg" alt="Province" class="w-4 h-4" />
-            Galing Probinsya
-          </button>
-          <button class="text-left px-3 py-2 rounded-md hover:bg-gray-300 text-gray-600 text-xs flex items-center gap-2">
-            <img src="/images/bestIcon.svg" alt="Training" class="w-4 h-4" />
-            Best Training Institution
-          </button>
+          <NuxtLink to="/criteria/BRO">
+            <button
+              :class="[
+                'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs',
+                isActive('/criteria/BRO') ? 'bg-blue-100 text-gray-800 border-b-3 border-amber-600' : 'hover:bg-blue-200 text-gray-700'
+              ]"
+            >
+              <img src="/images/broIcon.svg" alt="Office" class="w-4 h-4" />
+              Best Regional Office
+            </button>
+          </NuxtLink>
+
+          <NuxtLink to="/criteria/GP">
+            <button
+              :class="[
+                'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs',
+                isActive('/criteria/GP') ? 'bg-blue-100 text-gray-800 border-b-3 border-amber-600' : 'hover:bg-blue-200 text-gray-700'
+              ]"
+            >
+              <img src="/images/gpIcon.svg" alt="Office" class="w-4 h-4" />
+              Best Regional Office
+            </button>
+          </NuxtLink>
+
+          <NuxtLink to="/criteria/BTI">
+            <button
+              :class="[
+                'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs',
+                isActive('/criteria/BTI') ? 'bg-blue-100 text-gray-800 border-b-3 border-amber-600' : 'hover:bg-blue-200 text-gray-700'
+              ]"
+            >
+              <img src="/images/bestIcon.svg" alt="Office" class="w-4 h-4" />
+              Best Regional Office
+            </button>
+          </NuxtLink>  
+
         </div>
 
         <!-- User Management -->

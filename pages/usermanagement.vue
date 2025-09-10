@@ -3,7 +3,7 @@
     <SidebarAdmin />
 
     <div class="flex-1 bg-blue-200 mt-4 mr-4 mb-4 flex ">
-      <section class="flex-1 bg-gray-100 rounded-2xl shadow-lg overflow-y-auto p-4 pt-20 ">
+      <section class="flex-1 bg-gray-100 rounded-2xl shadow-lg overflow-y-auto p-4 pt-20 border-b-4 border-blue-600">
         <div class="flex justify-between items-center mb-4">
           <div class="flex items-center text-green-600 font-semibold cursor-pointer">
             <span class="mr-2">
@@ -34,9 +34,69 @@
             </div>
           </div>
         </div>
-        <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-4">
-          Add User Here
+        
+        <section class="flex-1 bg-white flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto border-b-2 border-green-600">
+        <div class="p-4">
+          <div class="flex items-center p-4 bg-white border border-gray-300 rounded-xl shadow-md w-full space-x-4">
+  <!-- Profile Image -->
+  <img src="/images/profile.png" alt="User" class="w-16 h-16 rounded-full object-cover border" />
+
+  <!-- User Info -->
+  <div class="flex-1">
+    <h2 class="text-lg font-semibold">John Doe</h2>
+    <p class="text-sm text-gray-500">Frontend Developer</p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex items-center space-x-2">
+    <button class="px-3 py-1 text-sm text-blue-600 border border-blue-500 rounded-lg hover:bg-blue-50 transition">
+      Edit Role
+    </button>
+    <button class="px-3 py-1 text-sm text-red-600 border border-red-500 rounded-lg hover:bg-red-50 transition">
+      Delete
+    </button>
+  </div>
+</div>
+
+
+
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
+          <div class="bg-white text-gray-800 p-6 rounded-xl shadow-md my-2 border-1 border-gray-400">
+            Add User Here
+          </div>
         </div>
+        
+      </section>
+        
 
       </section>
 

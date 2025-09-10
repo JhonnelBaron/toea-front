@@ -1,16 +1,32 @@
 <template>
     <div class="max-w-full container p-8 space-y-8 bg-white rounded-lg shadow-md flex-1 overflow-y-auto">
       <!-- Section Header -->
-        <div class="flex justify-between items-center text-2xl font-bold text-gray-800 mb-6">
-            <div>A. Good Governance Measures</div>
-            <AddCriteria :activeTab="activeTab"/>
-        </div>
+        <div class="flex justify-between items-center text-xl font-semibold text-gray-800 mb-6">
+
+  <!-- Left title -->
+  <div>A. Good Governance Measures</div>
+
+  <!-- Right side: search and AddCriteria -->
+  <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-lg shadow-md">
+
+<!-- Search input -->
+    <input
+    type="text"
+    placeholder="Search criteria..."
+    class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-64"
+    />
+
+    <!-- AddCriteria component -->
+    <AddCriteria :activeTab="activeTab"/>
+  </div>
+</div>
+
   
       <!-- Table Section -->
-<section class="bg-white rounded-lg" v-for="(criteria, index) in criteriaList" :key="criteria.id">
+<section class="bg-gray-100 rounded-lg p-4 border border-gray-400 border-b-gray-400 border-b-4" v-for="(criteria, index) in criteriaList" :key="criteria.id">
   <div>
     <div class="flex items-center gap-2">
-      <h2 class="text-xl font-semibold">
+      <h2 class="text-md font-semibold">
         {{ criteria.number }}. {{ criteria.title }}
       </h2>
       <EditCriteria :criteriaId="criteria.id"
@@ -45,13 +61,13 @@
   <div class="overflow-x-auto">
     <table class="min-w-full text-sm text-left border border-gray-200">
       <thead class="bg-gray-100">
-        <tr class="bg-gray-200">
-          <th class="px-4 py-2">Requirements</th>
-          <th class="px-4 py-2">Score</th>
-          <th class="px-4 py-2">Means of Verification</th>
+        <tr class="bg-gray-200 border border-gray-400 text-xs">
+          <th class="px-4 py-2 border-b-blue-600 border-b-2 font-medium">Requirements</th>
+          <th class="px-4 py-2 border-b-green-600 border-b-2 font-medium">Score</th>
+          <th class="px-4 py-2 border-b-red-600 border-b-2 font-medium">Means of Verification</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="text-xs">
           <tr
             v-for="(requirement, reqIndex) in criteria.a_requirements"
             :key="requirement.id"
@@ -67,8 +83,6 @@
       </tbody>
     </table>
   </div>
-
-  <hr class="my-10 border-gray-500" />
 </section>
     </div>
   </template>

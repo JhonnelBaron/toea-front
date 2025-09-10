@@ -1,18 +1,34 @@
 <template>
     <div class="max-w-full container p-8 space-y-8 bg-white rounded-lg shadow-md flex-1 overflow-y-auto">
       <!-- Section Header -->
-        <div class="flex justify-between items-center text-2xl font-bold text-gray-800 mb-6">
-            <div>C. Administrative and Support Services</div>
-            <AddCriteria :activeTab="activeTab"/>
-        </div>
+        <div class="flex justify-between items-center text-xl font-semibold text-gray-800 mb-6">
+
+  <!-- Left title -->
+  <div>C. Administrative and Support Services</div>
+
+  <!-- Right side: search and AddCriteria -->
+  <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-lg shadow-md">
+
+<!-- Search input -->
+    <input
+    type="text"
+    placeholder="Search criteria..."
+    class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-64"
+    />
+
+    <!-- AddCriteria component -->
+    <AddCriteria :activeTab="activeTab"/>
+  </div>
+</div>
+
   
-    <!-- Table Section -->
-    <section class="bg-white rounded-lg" v-for="(criteria, index) in criteriaList" :key="criteria.id">
-      <div>
-        <div class="flex items-center gap-2">
-          <h2 class="text-xl font-semibold">
-            {{ criteria.number }}. {{ criteria.title }}
-          </h2>
+      <!-- Table Section -->
+<section class="bg-gray-100 rounded-lg p-4 border border-gray-400 border-b-gray-400 border-b-4" v-for="(criteria, index) in criteriaList" :key="criteria.id">
+  <div>
+    <div class="flex items-center gap-2">
+      <h2 class="text-md font-semibold">
+        {{ criteria.number }}. {{ criteria.title }}
+      </h2>
       <EditCriteria :criteriaId="criteria.id"
   :activeTab="activeTab"/>
          <EditTags
@@ -23,10 +39,10 @@
         />
         </div>
 
-        <!-- Description -->
-        <p class="text-sm text-gray-600 my-2" v-if="criteria.description">
-          {{ criteria.description }}
-        </p>
+    <!-- Description -->
+    <p class="text-sm text-gray-600 my-2" v-if="criteria.description">
+      {{ criteria.description }}
+    </p>
 
         <!-- Tags -->
         <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
@@ -40,35 +56,33 @@
         </div>
       </div>
 
-      <!-- Table -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left border border-gray-200">
-          <thead class="bg-gray-100">
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2">Requirements</th>
-              <th class="px-4 py-2">Score</th>
-              <th class="px-4 py-2">Means of Verification</th>
-            </tr>
-          </thead>
-          <tbody>
-              <tr
-                v-for="(requirement, reqIndex) in criteria.c_requirements"
-                :key="requirement.id"
-              >
-                <td class="px-4 py-2">{{ requirement.requirement_description }}</td>
-                <td class="px-4 py-2">{{ requirement.point_value }}</td>
-                <td class="px-4 py-2">
-                  <span v-if="reqIndex === 0">
-                    {{ criteria.means_of_verification || 'N/A' }}
-                  </span>
-                </td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <hr class="my-10 border-gray-500" />
-    </section>
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left border border-gray-200">
+      <thead class="bg-gray-100">
+        <tr class="bg-gray-200 border border-gray-400 text-xs">
+          <th class="px-4 py-2 border-b-blue-600 border-b-2 font-medium">Requirements</th>
+          <th class="px-4 py-2 border-b-green-600 border-b-2 font-medium">Score</th>
+          <th class="px-4 py-2 border-b-red-600 border-b-2 font-medium">Means of Verification</th>
+        </tr>
+      </thead>
+      <tbody class="text-xs">
+          <tr
+            v-for="(requirement, reqIndex) in criteria.a_requirements"
+            :key="requirement.id"
+          >
+            <td class="px-4 py-2">{{ requirement.requirement_description }}</td>
+            <td class="px-4 py-2">{{ requirement.point_value }}</td>
+            <td class="px-4 py-2">
+              <span v-if="reqIndex === 0">
+                {{ criteria.means_of_verification || 'N/A' }}
+              </span>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
     </div>
   </template>
   
@@ -77,11 +91,13 @@
   import EditCriteria from '../Buttons/EditCriteria.vue'; 
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
-
-    const { $api } = useNuxtApp()
-    const { activeTab } = defineProps({
+  import DeleteCriteria from '../Buttons/DeleteCriteria.vue';
+  
+  const { $api } = useNuxtApp()
+  const { activeTab } = defineProps({
   activeTab: String
 })
+
 
 const mapCriteriaToTags = (criteria) => {
   const tags = []
@@ -124,7 +140,7 @@ const handleTagsSave = (criteriaId, updatedCriteria) => {
 
 const fetchCriterias = async () => {
   try {
-    const res = await $api.get('/get-all-c')
+    const res = await $api.get('/get-all')
     if (res.data.status === 200) {
       criteriaList.value = res.data.data
 
@@ -142,6 +158,13 @@ const fetchCriterias = async () => {
 onMounted(() => {
   fetchCriterias()
 })
+
+const showDeleteModal = ref(false)
+
+const deleteItem = () => {
+  // your delete logic here
+  console.log('Item deleted!')
+}
   </script>
 
 <style>
