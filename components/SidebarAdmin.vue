@@ -33,9 +33,9 @@
         alt="Profile"
         class="w-24 h-24 rounded-full object-cover border-4 border-gray-300 mb-4"
       />
-      <h2 class="text-xm font-bold text-gray-800 font-sans">George A. Nuñez</h2>
-      <p class="text-xs text-gray-600">Project Support Staff II</p>
-      <p class="text-xs text-gray-500">TESDA Central Office</p>
+      <h2 class="text-xm font-bold text-gray-800 font-sans">   {{ user ? `${user.first_name} ${user.last_name}` : 'Loading...' }}</h2>
+      <p class="text-xs text-gray-500">{{ user?.designation }}</p>
+      <p class="text-xs text-gray-600">{{ user?.office }}</p>
     </div>
 
     <!-- Bottom Section (Tabs + Logout) -->
@@ -157,8 +157,8 @@ const isActive = (path) => route.path === path
 
 const { $api } = useNuxtApp()
 
-import { ref } from 'vue'
-
+import { ref, onMounted } from 'vue'
+const user = ref(null)
 const isLoggingOut = ref(false)
 
 const handleLogout = async () => {
@@ -175,6 +175,15 @@ const handleLogout = async () => {
     isLoggingOut.value = false
   }
 }
+
+onMounted(async () => {
+  try {
+    const { data } = await $api.get('/user') // token is auto-injected
+    user.value = data
+  } catch (error) {
+    console.error('Failed to fetch user:', error)
+  }
+})
 
 </script>
 

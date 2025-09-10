@@ -18,7 +18,7 @@
     />
 
     <!-- AddCriteria component -->
-    <AddCriteria :activeTab="activeTab"/>
+    <AddCriteria :activeTab="activeTab" @save="handleNewCriteria"/>
   </div>
 </div>
 
@@ -40,6 +40,11 @@
         :activeTab="activeTab"
         @save="(tags) => handleTagsSave(criteria.id, tags)"
         />
+                <DeleteCriteria 
+        :criteriaId="criteria.id" 
+         :activeTab="activeTab"
+        @deleted="deleteItem" 
+      />
         </div>
 
     <!-- Description -->
@@ -132,6 +137,14 @@ const handleCriteriaSave = (criteriaId, updatedCriteria) => {
   selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
 }
 
+const handleNewCriteria = (newCriteria) => {
+  // ✅ Add to the list
+  criteriaList.value.push(newCriteria)
+
+  // ✅ Also prepare its tags
+  selectedTagsMap.value[newCriteria.id] = mapCriteriaToTags(newCriteria)
+}
+
 
   const selectedTagsMap = ref([])
 const criteriaList = ref([])
@@ -193,8 +206,8 @@ onMounted(() => {
 
 const showDeleteModal = ref(false)
 
-const deleteItem = () => {
-  // your delete logic here
+const deleteItem = (id) => {
+  criteriaList.value = criteriaList.value.filter(c => c.id !== id)
   console.log('Item deleted!')
 }
   </script>

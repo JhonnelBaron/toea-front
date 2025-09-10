@@ -17,11 +17,12 @@ import AddModal from '../Modals/AddModal.vue'
 const props = defineProps({
   activeTab: String
 })
-
+const emit = defineEmits(['save']) 
 
 const showModal = ref(false)
 
 const handleSave = (data) => {
+  emit('save', data) 
   console.log('Saved data:', data)
 }
 </script>
