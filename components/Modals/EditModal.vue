@@ -166,6 +166,17 @@ const getUpdateEndpoint = (tab, id) => {
 
 const getRequirementsKey = (tab) => {
   switch (tab) {
+    case 'A': return 'aRequirements'
+    case 'B': return 'bRequirements'
+    case 'C': return 'cRequirements'
+    case 'D': return 'dRequirements'
+    case 'E': return 'eRequirements'
+    default: return 'aRequirements'
+  }
+}
+
+const getRequirementsResponseKey = (tab) => {
+  switch (tab) {
     case 'A': return 'a_requirements'
     case 'B': return 'b_requirements'
     case 'C': return 'c_requirements'
@@ -175,13 +186,14 @@ const getRequirementsKey = (tab) => {
   }
 }
 
+
 const populateForm = (data) => {
   annex.value = data.number || ''
   title.value = data.title || ''
   description.value = data.description || ''
   verification.value = data.means_of_verification || ''
 
-  const reqKey = getRequirementsKey(props.activeTab)
+  const reqKey = getRequirementsResponseKey(props.activeTab)
   const rawReqs = data[reqKey] || []
 
   requirements.value = rawReqs.map(req => ({
@@ -214,19 +226,30 @@ watch(
 const saveCriteria = async () => {
   isSaving.value = true
 
+  const reqKey = getRequirementsKey(props.activeTab)
+  const updateEndpoint = getUpdateEndpoint(props.activeTab, props.criteriaId)
+
   const payload = {
     title: title.value,
     number: annex.value,
     description: description.value,
-    requirements: requirements.value,
     means_of_verification: verification.value,
+    [reqKey]: requirements.value.map(req => ({
+      requirement_description: req.name,
+      point_value: req.score
+    }))
   }
 
-  const updateEndpoint = getUpdateEndpoint(props.activeTab, props.criteriaId)
-
-  try {
+ try {
     await $api.post(updateEndpoint, payload)
-    emit('save', payload)
+
+    // ✅ Fetch updated record so backend shape matches (snake_case keys)
+    const endpoint = getApiEndpoint(props.activeTab, props.criteriaId)
+    const res = await $api.get(endpoint)
+
+    if (res.data.status === 200) {
+      emit('save', res.data.data) // ✅ emit backend's actual object
+    }
 
     showSuccess.value = true
     setTimeout(() => {

@@ -30,7 +30,9 @@
         {{ criteria.number }}. {{ criteria.title }}
       </h2>
       <EditCriteria :criteriaId="criteria.id"
-  :activeTab="activeTab"/>
+      :activeTab="activeTab"
+      @save="(data) => handleCriteriaSave(criteria.id, data)"
+  />
       <EditTags
         :initialTags="getTagsForCriteria(criteria)"
         :criteriaId="criteria.id"
@@ -68,7 +70,7 @@
       </thead>
       <tbody class="text-xs">
           <tr
-            v-for="(requirement, reqIndex) in criteria.a_requirements"
+            v-for="(requirement, reqIndex) in criteria.e_requirements"
             :key="requirement.id"
           >
             <td class="px-4 py-2">{{ requirement.requirement_description }}</td>
@@ -114,6 +116,22 @@ const mapCriteriaToTags = (criteria) => {
   return tags
 }
 
+const handleCriteriaSave = (criteriaId, updatedCriteria) => {
+  // Find index in list
+  const index = criteriaList.value.findIndex(c => c.id === criteriaId)
+  if (index !== -1) {
+    // Replace with new data
+    criteriaList.value[index] = {
+      ...criteriaList.value[index],
+      ...updatedCriteria
+    }
+  }
+
+  // Also update tags map if needed
+  selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
+}
+
+
 const selectedTagsMap = ref([])
 const criteriaList = ref([])
 
@@ -126,20 +144,38 @@ const getTagsForCriteria = (criteria) => {
 //   selectedTags.value = tags
 // }
 
-const handleTagsSave = (criteriaId, updatedCriteria) => {
-  // update tags map based on new backend data
-  selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
+// const handleTagsSave = (criteriaId, updatedCriteria) => {
+//   // update tags map based on new backend data
+//   selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
 
-  // also update criteriaList so table reflects changes
+//   // also update criteriaList so table reflects changes
+//   const index = criteriaList.value.findIndex(c => c.id === criteriaId)
+//   if (index !== -1) {
+//     criteriaList.value[index] = updatedCriteria
+//   }
+// }
+
+const handleTagsSave = (criteriaId, updatedCriteria) => {
   const index = criteriaList.value.findIndex(c => c.id === criteriaId)
   if (index !== -1) {
-    criteriaList.value[index] = updatedCriteria
+    // Merge instead of replace
+    criteriaList.value[index] = {
+      ...criteriaList.value[index],  // keep old fields (like e_requirements)
+      ...updatedCriteria             // update only changed fields
+    }
   }
+
+  // update tags map
+  selectedTagsMap.value[criteriaId] = mapCriteriaToTags({
+    ...criteriaList.value[index],
+    ...updatedCriteria
+  })
 }
+
 
 const fetchCriterias = async () => {
   try {
-    const res = await $api.get('/get-all')
+    const res = await $api.get('/get-all-e')
     if (res.data.status === 200) {
       criteriaList.value = res.data.data
 
