@@ -5,12 +5,11 @@
     <div class="flex-1 bg-gray-100 flex flex-col pl-4">
      <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
   <!-- Best Regional Office Card -->
-  <div class="bg-white p-4 rounded-lg flex-1 flex flex-col shadow-md">
-    <p class="text-lg text-center font-semibold text-blue-900">BEST REGIONAL OFFICE</p>
-    <span class="border-b block mt-1 mb-3"></span>
-    <div class="flex flex-col items-center justify-center text-center">
-      <div class="font-light text-sm text-gray-700">Welcome!</div>
-      <div class="font-thin text-gray-600 text-sm mt-1">
+  <div class="bg-white p-4 rounded-lg flex-1 flex flex-col shadow-md py-8">
+    <p class="text-lg text-center font-light text-white bg-blue-600 rounded-lg p-2 mb-2">🏆 BEST REGIONAL OFFICE</p>
+    <div class="flex flex-col items-center justify-center text-center mt-2">
+      <div class="font-light text-sm text-gray-700">Welcome to your Dashboard!</div>
+      <div class=" text-gray-600 text-sm">
         Regional Operations and Management Office
       </div>
     </div>
@@ -49,23 +48,37 @@
 
   <!-- Partner Logos Card (extra wide) -->
   <div class="bg-white p-4 rounded-lg flex-[2] flex flex-col justify-center items-center shadow-md">
-    <div class="flex flex-row gap-6 justify-center items-center">
-      <img src="/images/bpLogo.png" alt="Logo 1" class="w-20 h-20 object-contain" />
-    <img src="/images/tesdaLogo.png" alt="Logo 2" class="w-20 h-20 object-contain" />
-    <img src="/images/kayangLogo.png" alt="Logo 3" class="w-40 h-20 object-contain" />
-      <img src="/images/toeaLogo.png" class="w-22 h-20" alt="Logo 4">
-    </div>
+  <div class="flex flex-row justify-between items-center w-full gap-4">
+    <img src="/images/bpLogo.png" alt="Logo 1"
+      class="h-16 sm:h-20 object-contain flex-1 max-w-[80px] sm:max-w-[100px]" />
+    <img src="/images/tesdaLogo.png" alt="Logo 2"
+      class="h-16 sm:h-20 object-contain flex-1 max-w-[80px] sm:max-w-[100px]" />
+    <img src="/images/kayangLogo.png" alt="Logo 3"
+      class="h-16 sm:h-20 object-contain flex-[1.5] max-w-[160px] sm:max-w-[200px]" />
+    <img src="/images/toeaLogo.png" alt="Logo 4"
+      class="h-16 sm:h-20 object-contain flex-1 max-w-[88px] sm:max-w-[110px]" />
   </div>
+</div>
+
 
   <!-- Mark as Done Card (smaller) -->
-  <div class="bg-white p-6 rounded-lg flex-[0.8] flex flex-col justify-between items-center shadow-md">
-    <p class="text-sm font-light mb-3">Done Evaluating?</p>
-    <button
-      class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out"
-    >
-      ✅ Mark as Done
-    </button>
-  </div>
+  <div class="bg-white relative overflow-hidden p-6 rounded-lg flex-[0.8] flex flex-col justify-center items-start shadow-md">
+  <!-- Check background -->
+  <img 
+    src="/images/check.png" 
+    alt="Check" 
+    class="absolute -right-18 -bottom-10 w-60 h-60 opacity-30 pointer-events-none select-none object-contain" 
+  />
+
+  <p class="text-lg font-light mb-2 relative z-10">Done Evaluating?</p>
+  <button
+    class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out relative z-10"
+  >
+    ✅ Mark as Done
+  </button>
+</div>
+
+
 </div>
 
 
