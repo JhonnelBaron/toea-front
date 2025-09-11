@@ -3,42 +3,72 @@
     <NewSidebar />
 
     <div class="flex-1 bg-gray-200 flex flex-col pl-4">
-      <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
-        <!-- Best Regional Office Card -->
-        <div class="bg-white p-4 rounded-lg w-1/5 min-w-[150px] h-full flex flex-col shadow-2xs">
-          <p class="text-sm font-medium text-center">Best Regional Office</p>
-          <span class="border-b p-1"></span>
-          <div class="flex-grow flex items-center justify-center">
-            <div class="font-light text-center">
-              Regional Operations and Management Office
-            </div>
-          </div>
-        </div>
-
-        <!-- 2024 Winners Card -->
-        <div class="bg-white p-4 rounded-lg flex-1 h-full flex flex-col justify-start shadow-2xs">
-          <p class="text-sm font-medium mb-2">2024 Winners</p>
-          <ul class="space-y-1 flex-grow">
-            <li class="font-light text-sm border-b">TESDA Central Office</li>
-            <li class="font-light text-sm border-b">TESDA Nueva Ecija Provincial Office</li>
-            <li class="font-light text-sm border-b">TESDA Nueva Ecija Provincial Office</li>
-          </ul>
-        </div>
-
-        <!-- Mark as Done Card -->
-        <div
-          class="bg-white p-4 rounded-lg w-1/4 min-w-[200px] text-end h-full flex flex-col justify-between shadow-2xs"
-        >
-          <p class="text-sm font-light">Done Evaluating?</p>
-          <div>
-            <button
-              class="bg-green-400 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md"
-            >
-              Mark as Done for Evalutation!
-            </button>
-          </div>
-        </div>
+     <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
+  <!-- Best Regional Office Card -->
+  <div class="bg-white p-4 rounded-lg flex-1 flex flex-col shadow-md">
+    <p class="text-lg text-center font-semibold text-blue-900">BEST REGIONAL OFFICE</p>
+    <span class="border-b block mt-1 mb-3"></span>
+    <div class="flex flex-col items-center justify-center text-center">
+      <div class="font-light text-sm text-gray-700">Welcome!</div>
+      <div class="font-thin text-gray-600 text-sm mt-1">
+        Regional Operations and Management Office
       </div>
+    </div>
+  </div>
+
+  <!-- Overall Evaluation Completion Card -->
+  <div class="bg-white relative overflow-hidden p-6 rounded-lg flex-1 flex flex-col justify-between shadow-md">
+    <!-- Trophy background -->
+    <img 
+      src="/images/trophy.png" 
+      alt="Trophy" 
+      class="absolute right-8 bottom-2 w-28 h-34 opacity-40 pointer-events-none select-none" 
+    />
+
+    <p class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2 relative z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3v1H6v2h3v1c0 1.657 1.343 3 3 3s3-1.343 3-3v-1h3v-2h-3v-1c0-1.657-1.343-3-3-3z" />
+      </svg>
+      Overall Evaluation Completion
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="relative z-10">
+      <div class="flex justify-between text-xs mb-1 text-gray-600">
+        <span>Completion Rate</span>
+        <span>75%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div
+          class="bg-green-500 h-4 rounded-full transition-all duration-500"
+          style="width: 75%"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner Logos Card (extra wide) -->
+  <div class="bg-white p-4 rounded-lg flex-[2] flex flex-col justify-center items-center shadow-md">
+    <p class="text-base font-semibold text-gray-800 mb-4">Partner Logos</p>
+    <div class="flex flex-row gap-6 justify-center items-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" class="w-12 h-12" alt="Logo 1">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-12 h-12" alt="Logo 2">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968267.png" class="w-12 h-12" alt="Logo 3">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" class="w-12 h-12" alt="Logo 4">
+    </div>
+  </div>
+
+  <!-- Mark as Done Card (smaller) -->
+  <div class="bg-white p-6 rounded-lg flex-[0.8] flex flex-col justify-between items-center shadow-md">
+    <p class="text-sm font-light mb-3">Done Evaluating?</p>
+    <button
+      class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 ease-in-out"
+    >
+      ✅ Mark as Done
+    </button>
+  </div>
+</div>
+
 
       <!-- Grid Section -->
       <section
@@ -53,7 +83,7 @@
       <!-- Header -->
       <div>
         <p class="text-sm font-semibold text-gray-800">Region {{ region }}</p>
-        <p class="text-xs text-gray-500">TESDA Office</p>
+        <p class="text-xs text-gray-500">TESDA Office / Small / Medium / Large</p>
       </div>
 
       <!-- Progress -->
