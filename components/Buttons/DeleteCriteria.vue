@@ -1,6 +1,6 @@
 <template>
   <button @click="showModal = true">
-    <img src="/images/trashbin.svg" alt="Delete" class="w-7 h-7 pl-2" />
+    <img src="/images/trashbin.svg" alt="Delete" class="w-5 h-5" />
   </button>
 
   <DeleteModal 

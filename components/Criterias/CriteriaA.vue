@@ -40,6 +40,9 @@
         :activeTab="activeTab"
         @save="(tags) => handleTagsSave(criteria.id, tags)"
         />
+
+        <IncOffice />
+        
       <DeleteCriteria 
         :criteriaId="criteria.id" 
          :activeTab="activeTab"
@@ -54,15 +57,22 @@
     </p>
 
     <!-- Tags -->
-    <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
-      <span
-        v-for="tag in getTagsForCriteria(criteria)"
-        :key="tag"
-        class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-500"
-      >
-        {{ tag }}
-      </span>
-    </div>
+     <div class="flex flex-col">
+        <div>
+          <span class="font-light border border-gray-400 py- px-2 rounded-md">Executive Office Evaluator:</span> 
+          
+        </div>
+        <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
+          <span class="font-light border border-gray-400 py- px-2 rounded-md">Category:</span>
+          <span
+            v-for="tag in getTagsForCriteria(criteria)"
+            :key="tag"
+            class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-500"
+          >
+            {{ tag }}
+          </span>
+        </div>
+      </div>
   </div>
 
   <!-- Table -->
@@ -101,6 +111,7 @@
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
   import DeleteCriteria from '../Buttons/DeleteCriteria.vue';
+import IncOffice from '../Buttons/IncOffice.vue';
   
   const { $api } = useNuxtApp()
   const { activeTab } = defineProps({
