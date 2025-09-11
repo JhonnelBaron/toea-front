@@ -2,7 +2,7 @@
   <div class="flex h-screen overflow-hidden">
     <NewSidebar />
 
-    <div class="flex-1 bg-gray-200 flex flex-col pl-4">
+    <div class="flex-1 bg-gray-100 flex flex-col pl-4">
      <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
   <!-- Best Regional Office Card -->
   <div class="bg-white p-4 rounded-lg flex-1 flex flex-col shadow-md">
@@ -49,12 +49,11 @@
 
   <!-- Partner Logos Card (extra wide) -->
   <div class="bg-white p-4 rounded-lg flex-[2] flex flex-col justify-center items-center shadow-md">
-    <p class="text-base font-semibold text-gray-800 mb-4">Partner Logos</p>
     <div class="flex flex-row gap-6 justify-center items-center">
-      <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" class="w-12 h-12" alt="Logo 1">
-      <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" class="w-12 h-12" alt="Logo 2">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968267.png" class="w-12 h-12" alt="Logo 3">
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" class="w-12 h-12" alt="Logo 4">
+      <img src="/images/bpLogo.png" alt="Logo 1" class="w-20 h-20 object-contain" />
+    <img src="/images/tesdaLogo.png" alt="Logo 2" class="w-20 h-20 object-contain" />
+    <img src="/images/kayangLogo.png" alt="Logo 3" class="w-40 h-20 object-contain" />
+      <img src="/images/toeaLogo.png" class="w-22 h-20" alt="Logo 4">
     </div>
   </div>
 
@@ -62,7 +61,7 @@
   <div class="bg-white p-6 rounded-lg flex-[0.8] flex flex-col justify-between items-center shadow-md">
     <p class="text-sm font-light mb-3">Done Evaluating?</p>
     <button
-      class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 ease-in-out"
+      class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out"
     >
       ✅ Mark as Done
     </button>
