@@ -16,5 +16,12 @@ export default defineNuxtConfig({
         }
       ]
     }
+  },
+    nitro: {
+    prerender: {
+      crawlLinks: true,
+      failOnError: false,   // don’t stop the build if a route fails
+      ignore: ['/verify'],  // skip prerendering /verify
+    }
   }
 })
