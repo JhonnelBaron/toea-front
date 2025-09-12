@@ -59,11 +59,11 @@
     <!-- Tags -->
      <div class="flex flex-col">
         <div>
-          <span class="font-light border border-gray-400 py- px-2 rounded-md">Executive Office Evaluator:</span> 
+          <span class="font-light border border-gray-400 py- px-2 rounded-md">Tags goes here</span> 
           
         </div>
         <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
-          <span class="font-light border border-gray-400 py- px-2 rounded-md">Category:</span>
+          <span class="font-light border border-gray-400 py- px-2 rounded-md">Category goes here</span>
           <span
             v-for="tag in getTagsForCriteria(criteria)"
             :key="tag"

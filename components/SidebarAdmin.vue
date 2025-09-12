@@ -108,6 +108,22 @@
         </div>
 
         <!-- User Management -->
+         <NuxtLink to="/coropoti">
+          <button
+            :class="[
+              'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs',
+              isActive('/coropoti') ? 'bg-blue-100 text-gray-800 border-b-3 border-amber-600' : 'hover:bg-blue-200 text-gray-700'
+            ]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.499 8.248h15m-15 7.501h15" />
+            </svg>
+
+            ROs, POs, and TIs
+          </button>
+        </NuxtLink>
+
+        <!-- User Management -->
         <NuxtLink to="/usermanagement">
           <button
             :class="[
