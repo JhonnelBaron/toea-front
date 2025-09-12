@@ -29,3 +29,4 @@ export default defineNuxtConfig({
       sourcemap: process.env.NODE_ENV !== 'production'
     }
   }
+})
