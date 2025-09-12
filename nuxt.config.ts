@@ -23,5 +23,9 @@ export default defineNuxtConfig({
       failOnError: false,   // don’t stop the build if a route fails
       ignore: ['/verify'],  // skip prerendering /verify
     }
+  },
+   vite: {
+    build: {
+      sourcemap: process.env.NODE_ENV !== 'production'
+    }
   }
-})
