@@ -41,7 +41,12 @@
         @save="(tags) => handleTagsSave(criteria.id, tags)"
         />
 
-        <IncOffice />
+        <IncOffice 
+        :initialOffices="getOfficesForCriteria(criteria)"
+        :criteriaId="criteria.id"
+        :activeTab="activeTab"
+        @save="(offices) => handleOfficesSave(criteria.id, offices)"
+        />
         
       <DeleteCriteria 
         :criteriaId="criteria.id" 
@@ -58,12 +63,16 @@
 
     <!-- Tags -->
      <div class="flex flex-col">
-        <div>
-          <span class="font-light border border-gray-400 py- px-2 rounded-md">Tags goes here</span> 
-          
+        <div v-if="getOfficesForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
+          <span
+            v-for="office in getOfficesForCriteria(criteria)"
+            :key="office"
+            class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full border border-blue-500"
+          >
+            {{ office }}
+          </span>
         </div>
         <div v-if="getTagsForCriteria(criteria).length" class="my-2 flex flex-wrap gap-2">
-          <span class="font-light border border-gray-400 py- px-2 rounded-md">Category goes here</span>
           <span
             v-for="tag in getTagsForCriteria(criteria)"
             :key="tag"
@@ -111,7 +120,7 @@
   import AddCriteria from '../Buttons/AddCriteria.vue';
   import EditTags from '../Buttons/EditTags.vue';
   import DeleteCriteria from '../Buttons/DeleteCriteria.vue';
-import IncOffice from '../Buttons/IncOffice.vue';
+  import IncOffice from '../Buttons/IncOffice.vue';
   
   const { $api } = useNuxtApp()
   const { activeTab } = defineProps({
@@ -134,6 +143,25 @@ const mapCriteriaToTags = (criteria) => {
   return tags
 }
 
+const mapCriteriaToOffices = (criteria) => {
+  const offices = []
+
+  if (criteria.as) offices.push('Administrative Service')
+  if (criteria.legal) offices.push('Legal Division')
+  if (criteria.co) offices.push('Certification Office')
+  if (criteria.fms) offices.push('Financial and Management Service')
+  if (criteria.nitesd) offices.push('National Institute for Technical Education and Skills Development')
+  if (criteria.piad) offices.push('Public Information and Assistance Division')
+  if (criteria.planning) offices.push('Planning Office')
+  if (criteria.plo) offices.push('Partnership and Linkages Office')
+  if (criteria.romo) offices.push('Regional Operations Management Office')
+  if (criteria.icto) offices.push('Information and Communication Office')
+  if (criteria.ws) offices.push('World Skills')
+
+  return offices
+}
+
+
 const handleCriteriaSave = (criteriaId, updatedCriteria) => {
   // Find index in list
   const index = criteriaList.value.findIndex(c => c.id === criteriaId)
@@ -147,6 +175,7 @@ const handleCriteriaSave = (criteriaId, updatedCriteria) => {
 
   // Also update tags map if needed
   selectedTagsMap.value[criteriaId] = mapCriteriaToTags(updatedCriteria)
+  selectedOfficesMap.value[criteriaId] = mapCriteriaToOffices(updatedCriteria)
 }
 
 const handleNewCriteria = (newCriteria) => {
@@ -155,6 +184,7 @@ const handleNewCriteria = (newCriteria) => {
 
   // ✅ Also prepare its tags
   selectedTagsMap.value[newCriteria.id] = mapCriteriaToTags(newCriteria)
+  selectedOfficesMap.value[newCriteria.id] = mapCriteriaToOffices(newCriteria)
 }
 
 
@@ -163,10 +193,16 @@ const handleNewCriteria = (newCriteria) => {
   // const selectedTags = ref([])
 const criteriaList = ref([])
 const selectedTagsMap = ref({}) 
+const selectedOfficesMap = ref({}) 
 
 const getTagsForCriteria = (criteria) => {
   const tags = selectedTagsMap.value[criteria.id]
   return Array.isArray(tags) ? tags : []   // ✅ ensures it’s always an array
+}
+
+const getOfficesForCriteria = (criteria) => {
+  const offices = selectedOfficesMap.value[criteria.id]
+  return Array.isArray(offices) ? offices : []   // ✅ ensures it’s always an array
 }
 
 const handleTagsSave = (criteriaId, updatedCriteria) => {
@@ -181,6 +217,23 @@ const handleTagsSave = (criteriaId, updatedCriteria) => {
 
   // update tags map
   selectedTagsMap.value[criteriaId] = mapCriteriaToTags({
+    ...criteriaList.value[index],
+    ...updatedCriteria
+  })
+}
+
+const handleOfficesSave = (criteriaId, updatedCriteria) => {
+  const index = criteriaList.value.findIndex(c => c.id === criteriaId)
+  if (index !== -1) {
+    // merge instead of replace
+    criteriaList.value[index] = {
+      ...criteriaList.value[index],   // keep old fields
+      ...updatedCriteria         // update only offices
+    }
+  }
+
+  // update offices map (so UI refreshes immediately)
+  selectedOfficesMap.value[criteriaId] = mapCriteriaToOffices({
     ...criteriaList.value[index],
     ...updatedCriteria
   })
@@ -207,7 +260,13 @@ const fetchCriterias = async () => {
         if (!selectedTagsMap.value[criteria.id]) {
           selectedTagsMap.value[criteria.id] = mapCriteriaToTags(criteria)
                   }
+
+        if (!selectedOfficesMap.value[criteria.id]) {
+          selectedOfficesMap.value[criteria.id] = mapCriteriaToOffices(criteria)
+                  }
       })
+
+
     }
   } catch (error) {
     console.error('Error fetching criteria:', error)

@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import IncOfficeModal from '../Modals/IncOfficeModal.vue'
 
 const props = defineProps({
-  initialTags: Array,
+  initialOffices: Array,
   criteriaId: Number,       // 👈 link to criteria
   activeTab: String,        // 👈 tab reference
 })
@@ -11,10 +11,10 @@ const props = defineProps({
 const emit = defineEmits(['save'])
 
 const showModal = ref(false)
-const tags = ref([])
+const offices = ref([])
 
-watch(() => props.initialTags, (newTags) => {
-  tags.value = Array.isArray(newTags) ? [...newTags] : []
+watch(() => props.initialOffices, (newOffices) => {
+  offices.value =  Array.isArray(newOffices) ? [...newOffices] : []
 }, { immediate: true })
 
 const handleSave = (data) => {
@@ -36,6 +36,6 @@ const handleSave = (data) => {
     :activeTab="activeTab"
     @close="showModal = false"
     @save="handleSave"
-    :initialTags="tags"
+    :initialOffices="offices"
   />
 </template>

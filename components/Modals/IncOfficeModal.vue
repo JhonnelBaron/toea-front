@@ -69,14 +69,12 @@
           </button>
         </div>
 
-        <div class="pt-4 text-right">
-          <button
-            @click="closeModal"
-            class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-          >
-            Save
-          </button>
-        </div>
+      <!-- Save Button -->
+      <div class="text-right pt-4">
+        <button @click="saveOffices" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Save
+        </button>
+      </div>
       </div>
     </div>
   </transition>
@@ -85,13 +83,37 @@
 <script setup>
 import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
+const { $api } = useNuxtApp()
 
 const props = defineProps({
   isOpen: Boolean,
   initialOffices: Array,
+ activeTab: {
+    type: String,
+    required: true
+  },
+  criteriaId: {
+    type: Number,
+    required: true
+  }
 })
 
+
 const emit = defineEmits(['close', 'save'])
+
+const officesToFieldMap = {
+  'Administrative Service' : 'as',
+  'Legal Division' : 'legal',
+  'Certification Office' : 'co',
+  'Financial and Management Service' : 'fms',
+  'National Institute for Technical Education and Skills Development' : 'nitesd',
+  'Public Information and Assistance Division' : 'piad',
+  'Planning Office': 'planning',
+  'Partnership and Linkages Office' : 'plo',
+  'Regional Operations Management Office' : 'romo',
+  'Information and Communication Office' : 'icto',
+  'World Skills' : 'ws',
+}
 
 const allOffices = [
   'Administrative Service',
@@ -158,11 +180,56 @@ const moveSelectedToLeft = () => {
 }
 
 const closeModal = () => emit('close')
-
-const saveOffices = () => {
-  emit('save', selectedOffices.value)
-  closeModal()
+const getOfficesApiEndpoint = (id) => {
+  switch (props.activeTab) {
+    case 'A':
+      return `/execute-a/${id}`
+    case 'B':
+      return `/execute-b/${id}`
+    case 'C':
+      return `/execute-c/${id}`
+    case 'D':
+      return `/execute-d/${id}`
+    case 'E':
+      return `/execute-e/${id}`
+    default:
+      return `/execute-a/${id}` // fallback
+  }
 }
+const isSavingOffices = ref(false)
+
+const saveOffices = async () => {
+  isSavingOffices.value = true
+  try {
+    // Map selected tags to DB fields
+    const fields = selectedOffices.value.map(tag => officesToFieldMap[tag]).filter(Boolean)
+
+    // Get correct API endpoint based on activeTab
+    const endpoint = getOfficesApiEndpoint(props.criteriaId)
+
+    const response = await $api.post(endpoint, { fields })
+
+    console.log('Executive Offices assigned updated successfully:', response.data)
+
+    emit('save', response.data.data)
+
+    // ✅ Close modal after short delay
+    setTimeout(() => {
+      closeModal()
+    }, 500)
+  } catch (error) {
+    console.error('Failed to save offices:', error)
+  } finally {
+    isSavingOffices.value = false
+  }
+}
+
+
+
+// const saveOffices = () => {
+//   emit('save', selectedOffices.value)
+//   closeModal()
+// }
 </script>
 
 <style scoped>
