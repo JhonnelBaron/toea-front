@@ -33,7 +33,7 @@
         <!-- Action Buttons -->
         <div class="mt-5 sm:mt-6 flex justify-end space-x-2">
           <button
-            @click="$emit('confirm')"
+            @click="handleDelete"
             class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none sm:w-auto sm:text-sm"
           >
             Delete
@@ -52,12 +52,27 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-
+const { $api } = useNuxtApp();
 const props = defineProps({
   isOpen: Boolean,
+  userId: Number, 
 });
 
 const emit = defineEmits(['close', 'confirm']);
+
+const handleDelete = async () => {
+  if (!props.userId) return;
+
+  try {
+    await $api.delete(`/users/${props.userId}`);
+    // Notify parent to refresh list
+    emit('confirm'); // parent can refresh users
+  } catch (err) {
+    console.error('Failed to delete user:', err);
+  } finally {
+    emit('close'); // close modal in all cases
+  }
+};
 </script>
 
 <style scoped>

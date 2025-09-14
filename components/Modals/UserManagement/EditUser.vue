@@ -52,7 +52,7 @@
         <!-- Role -->
         <div>
           <label class="block text-sm font-medium text-gray-800">Role</label>
-          <select v-model="role" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" placeholder="Select a role...">
+          <select v-model="role" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300">
             <option disabled value="">Select a role...</option>
             <option>Admin</option>
             <option>Secretariat</option>
@@ -107,6 +107,33 @@
           />
         </div>
 
+        <!-- Nominee fields (only show if Nominee) -->
+        <div v-if="role === 'Nominee'" class="space-y-4 border-t pt-4">
+          <h3 class="text-lg font-semibold">Nominee Information</h3>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Type</label>
+            <input v-model="nomineeType" type="text" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Category</label>
+            <input v-model="nomineeCategory" type="text" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Region</label>
+            <input v-model="region" type="text" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Province</label>
+            <input v-model="province" type="text" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Name</label>
+            <input v-model="nomineeName" type="text" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300" />
+          </div>
+        </div>
+
+
         <!-- Save Button -->
         <div class="text-right">
           <button
@@ -146,7 +173,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
-
+const { $api } = useNuxtApp()
 const props = defineProps({
   isOpen: Boolean,
   userData: Object, // Prop to receive the user's data to be edited
@@ -157,25 +184,69 @@ const emit = defineEmits(['close', 'save']);
 // Form field state, initialized with default values
 const firstName = ref('');
 const lastName = ref('');
-const role = ref('nominee');
+const role = ref('');
 const office = ref('');
 const designation = ref('');
 const email = ref('');
 const password = ref('');
 
+// nominee-specific
+const nomineeType = ref('');
+const nomineeCategory = ref('');
+const region = ref('');
+const province = ref('');
+const nomineeName = ref('');
+
+
 const isSaving = ref(false);
 const showSuccess = ref(false);
 
-// Watch for changes in the userData prop and update the form fields
+const fetchUser = async (id) => {
+  const { data } = await $api.get(`/users/${id}`);
+  return data;
+};
+
+
+// Utility: map backend role → frontend role
+const mapRoleToFrontend = (role) => {
+  if (!role) return '';
+  const normalized = role.toString().trim().toLowerCase();
+  const map = {
+    admin: 'Admin',
+    secretariat: 'Secretariat',
+    'external validator': 'External Validator',
+    'executive office focal': 'Executive Office Focal',
+    nominee: 'Nominee',
+    'regional office': 'Regional Office',
+  };
+  return map[normalized] || role;
+};
+
+
+// Utility: map frontend role → backend role
+const mapRoleToBackend = (role) => {
+  if (!role) return '';
+  return role.toLowerCase();
+};
+
+// Watch userData and pre-fill form
 watch(() => props.userData, (newVal) => {
   if (newVal) {
-    firstName.value = newVal.firstName || '';
-    lastName.value = newVal.lastName || '';
-    role.value = newVal.role || 'nominee';
+    firstName.value = newVal.first_name || '';
+    lastName.value = newVal.last_name || '';
+    role.value = mapRoleToFrontend(newVal.user_type);
     office.value = newVal.office || '';
     designation.value = newVal.designation || '';
     email.value = newVal.email || '';
-    password.value = ''; // Do not pre-fill password for security
+    password.value = '';
+
+    if (newVal.user_type === 'nominee' && newVal.nominee) {
+      nomineeType.value = newVal.nominee.nominee_type || '';
+      nomineeCategory.value = newVal.nominee.nominee_category || '';
+      region.value = newVal.nominee.region || '';
+      province.value = newVal.nominee.province || '';
+      nomineeName.value = newVal.nominee.nominee_name || '';
+    }
   }
 }, { immediate: true });
 
@@ -185,57 +256,45 @@ const closeModal = () => {
 };
 
 // Computed property to check if the form is valid before enabling the save button
-const isFormValid = computed(() => {
-  // Check if at least one field has changed from its original value
-  return (
-    firstName.value.trim() !== '' &&
-    lastName.value.trim() !== '' &&
-    role.value.trim() !== '' &&
-    office.value.trim() !== '' &&
-    designation.value.trim() !== '' &&
-    email.value.trim() !== ''
-  );
-});
+const isFormValid = computed(() =>
+  firstName.value && lastName.value && role.value && email.value
+);
+
 
 // Simulates a save action for a frontend-only application
 const saveUser = async () => {
   isSaving.value = true;
   try {
-    // Log the updated user data to the console instead of making an API call
-    const updatedUserData = {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      role: role.value,
+    const payload = {
+      first_name: firstName.value,
+      last_name: lastName.value,
+      user_type: mapRoleToBackend(role.value),
       office: office.value,
       designation: designation.value,
       email: email.value,
     };
-    // Include password only if it's been updated
-    if (password.value) {
-      updatedUserData.password = password.value;
+
+    if (password.value) payload.password = password.value;
+
+    if (payload.user_type === 'nominee') {
+      payload.nominee_type = nomineeType.value;
+      payload.nominee_category = nomineeCategory.value;
+      payload.region = region.value;
+      payload.province = province.value;
+      payload.nominee_name = nomineeName.value;
     }
-    
-    console.log('Updated user data to be saved:', updatedUserData);
 
-    // Simulate a successful save
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Show the success message
-    showSuccess.value = true;
+    await $api.post(`/users/${props.userData.id}`, payload);
 
-    // Wait 1.5 seconds, then hide the message and close the modal
-    setTimeout(() => {
-      showSuccess.value = false;
-      emit('save', updatedUserData); // Emit the updated data
-      closeModal();
-    }, 1500);
-
-  } catch (error) {
-    console.error('Failed to save user:', error);
+    emit('save'); // reload parent list
+    closeModal();
+  } catch (err) {
+    console.error(err);
   } finally {
     isSaving.value = false;
   }
 };
+
 </script>
 
 <style scoped>

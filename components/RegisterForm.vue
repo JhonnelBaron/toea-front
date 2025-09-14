@@ -218,17 +218,73 @@ const router = useRouter()
 //     console.error('Registration error:', error.response?.data || error.message);
 //   }
 // }
+// async function register() {
+//   try {
+//     const response = await $api.post('/register', form.value)
+//     console.log('Registration success:', response.data)
+
+//     // Only access localStorage on client
+//     if (process.client) {
+//       localStorage.setItem('verify_email', form.value.email)
+//     }
+
+//     // Redirect to verify page
+//     router.push('/verify')
+
+//   } catch (error) {
+//     console.error('Registration error:', error.response?.data || error.message)
+//     alert('Registration failed: ' + (error.response?.data.message || error.message))
+//   }
+// }
 async function register() {
   try {
-    const response = await $api.post('/register', form.value)
+    // Map award to nominee_type
+    let nominee_type = ''
+    if (form.value.award === 'Galing Probinsya') nominee_type = 'GP'
+    if (form.value.award === 'Best Training Institution') nominee_type = 'BTI'
+    if (form.value.award === 'Best Regional Office') nominee_type = 'BRO' // in case you add later
+
+    // Map category to backend format (lowercase, dash)
+    let nominee_category = ''
+    switch (form.value.category) {
+      case 'Small': nominee_category = 'small'; break
+      case 'Medium': nominee_category = 'medium'; break
+      case 'Large': nominee_category = 'large'; break
+      case 'PTC/DTC': nominee_category = 'ptc-dtc'; break
+      case 'RTC/STC': nominee_category = 'rtc-stc'; break
+      case 'TAS': nominee_category = 'tas'; break
+    }
+
+    // nominee_name depends on award
+    let nominee_name = ''
+    if (form.value.award === 'Best Training Institution') {
+      nominee_name = form.value.institution
+    } else if (form.value.award === 'Galing Probinsya') {
+      nominee_name = form.value.name
+    }
+
+    const payload = {
+      user_type: 'nominee',
+      email: form.value.email,
+      password: form.value.password,
+      password_confirmation: form.value.password_confirmation,
+      nominee_type,
+      nominee_category,
+      region: form.value.region,
+      province: form.value.province,
+      nominee_name,
+      status: 'pending'
+    }
+
+    console.log("Submitting payload:", payload)
+
+    const response = await $api.post('/register', payload)
     console.log('Registration success:', response.data)
 
-    // Only access localStorage on client
     if (process.client) {
       localStorage.setItem('verify_email', form.value.email)
     }
 
-    // Redirect to verify page
     router.push('/verify')
 
   } catch (error) {
@@ -236,6 +292,7 @@ async function register() {
     alert('Registration failed: ' + (error.response?.data.message || error.message))
   }
 }
+
 const form = ref({
   user_type: 'nominee',
   name: '',

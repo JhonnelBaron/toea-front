@@ -85,6 +85,65 @@
           </div>
         </div>
 
+        <!-- 👇 Show nominee fields only if role === 'Nominee' -->
+        <div v-if="role === 'Nominee'" class="space-y-4 border-t pt-4">
+          <h3 class="text-md font-semibold text-gray-700">Nominee Details</h3>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Type</label>
+            <select v-model="nomineeType" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300">
+              <option disabled value="">Select type...</option>
+              <option>BRO</option>
+              <option>GP</option>
+              <option>BTI</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Category</label>
+            <select v-model="nomineeCategory" class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300">
+              <option disabled value="">Select category...</option>
+              <option>small</option>
+              <option>medium</option>
+              <option>large</option>
+              <option>ptc-dtc</option>
+              <option>rtc-stc</option>
+              <option>tas</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-800">Region</label>
+              <input
+                type="text"
+                v-model="region"
+                class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300"
+                placeholder="Enter region..."
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-800">Province</label>
+              <input
+                type="text"
+                v-model="province"
+                class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300"
+                placeholder="Enter province..."
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-800">Nominee Name</label>
+            <input
+              type="text"
+              v-model="nomineeName"
+              class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300"
+              placeholder="Enter nominee name..."
+            />
+          </div>
+        </div>
+
         <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-gray-800">Email</label>
@@ -99,12 +158,21 @@
         <!-- Password -->
         <div>
           <label class="block text-sm font-medium text-gray-800">Password</label>
-          <input
-            type="password"
-            v-model="password"
-            class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300"
-            placeholder="Enter password..."
-          />
+          <div class="relative">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              v-model="password"
+              class="mt-1 w-full border rounded px-3 py-2 text-sm border-gray-300 pr-10"
+              placeholder="Enter password..."
+            />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
         </div>
 
         <!-- Save Button -->
@@ -146,6 +214,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+const { $api } = useNuxtApp();
 
 const props = defineProps({
   isOpen: Boolean,
@@ -156,14 +225,37 @@ const emit = defineEmits(['close', 'save']);
 // Form field state
 const firstName = ref('');
 const lastName = ref('');
-const role = ref('nominee');
+const role = ref('');
 const office = ref('');
 const designation = ref('');
 const email = ref('');
-const password = ref('');
+const password = ref('toea2025');
+const showPassword = ref(false)
+const nomineeType = ref('')
+const nomineeCategory = ref('')
+const region = ref('')
+const province = ref('')
+const nomineeName = ref('')
 
 const isSaving = ref(false);
 const showSuccess = ref(false);
+
+// Resets all form fields to their initial state
+const resetForm = () => {
+  firstName.value = ''
+  lastName.value = ''
+  role.value = ''
+  office.value = ''
+  designation.value = ''
+  email.value = ''
+  password.value = 'toea2025'
+
+  nomineeType.value = ''
+  nomineeCategory.value = ''
+  region.value = ''
+  province.value = ''
+  nomineeName.value = ''
+}
 
 // Closes the modal and resets the form
 const closeModal = () => {
@@ -171,64 +263,72 @@ const closeModal = () => {
   emit('close');
 };
 
-// Resets all form fields to their initial state
-const resetForm = () => {
-  firstName.value = '';
-  lastName.value = '';
-  role.value = 'nominee'; // Set default role
-  office.value = '';
-  designation.value = '';
-  email.value = '';
-  password.value = '';
-};
 
-// Computed property to check if the form is valid before enabling the save button
+// ✅ Dynamic validation
 const isFormValid = computed(() => {
-  return (
-    firstName.value.trim() !== '' &&
-    lastName.value.trim() !== '' &&
-    role.value.trim() !== '' &&
-    office.value.trim() !== '' &&
-    designation.value.trim() !== '' &&
-    email.value.trim() !== '' &&
-    password.value.trim() !== ''
-  );
-});
+  const baseValid =
+    firstName.value &&
+    lastName.value &&
+    role.value &&
+    designation.value &&
+    email.value &&
+    password.value
+
+  if (role.value === 'Nominee') {
+    return (
+      baseValid &&
+      nomineeType.value &&
+      nomineeCategory.value &&
+      region.value &&
+      province.value &&
+      nomineeName.value
+    )
+  }
+  return baseValid
+})
 
 // Simulates a save action for a frontend-only application
 const saveUser = async () => {
-  isSaving.value = true;
+  isSaving.value = true
   try {
-    // Log the user data to the console instead of making an API call
-    const userData = {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      role: role.value,
+    let payload = {
+      first_name: firstName.value,
+      last_name: lastName.value,
+      user_type: role.value.toLowerCase(), // match backend
       office: office.value,
       designation: designation.value,
       email: email.value,
       password: password.value,
-    };
-    console.log('User data to be saved:', userData);
+    }
 
-    // Simulate a successful save
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Show the success message
-    showSuccess.value = true;
+    if (role.value === 'Nominee') {
+      payload.nominee = {
+        nominee_type: nomineeType.value,
+        nominee_category: nomineeCategory.value,
+        region: region.value,
+        province: province.value,
+        nominee_name: nomineeName.value,
+      }
+    }
 
-    // Wait 1.5 seconds, then hide the message and close the modal
-    setTimeout(() => {
-      showSuccess.value = false;
-      closeModal();
-    }, 1500);
+    const res = await $api.post('/users', payload)
 
-  } catch (error) {
-    console.error('Failed to save user:', error);
+    if (res.data.status === 200 || res.data.status === 201) {
+      showSuccess.value = true
+      emit('save', res.data.data)
+      setTimeout(() => {
+        showSuccess.value = false
+        closeModal()
+      }, 1500)
+    } else {
+      console.error('API error:', res.data)
+    }
+  } catch (err) {
+    console.error('Save failed:', err)
   } finally {
-    isSaving.value = false;
+    isSaving.value = false
   }
-};
+}
 </script>
 
 <style scoped>
