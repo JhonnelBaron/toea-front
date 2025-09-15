@@ -32,6 +32,7 @@
   <div class="flex flex-row gap-4">
     <!-- Card A -->
     <div
+      @click="handleClick('A')"
       class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
     >
       <div class="flex items-center gap-3">
@@ -63,6 +64,7 @@
 
     <!-- Card B -->
     <div
+      @click="handleClick('B')"
       class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
     >
       <div class="flex items-center gap-3">
@@ -93,6 +95,7 @@
 
     <!-- Card C -->
     <div
+      @click="handleClick('C')"
       class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
     >
       <div class="flex items-center gap-3">
@@ -124,6 +127,7 @@
 
     <!-- Card D -->
     <div
+      @click="handleClick('D')"
       class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
     >
       <div class="flex items-center gap-3">
@@ -154,6 +158,7 @@
 
     <!-- Card E -->
     <div
+      @click="handleClick('E')"
       class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
     >
       <div class="flex items-center gap-3">
@@ -184,3 +189,13 @@
   </div>
 </section>
 </template>
+
+<script setup>
+import { defineEmits } from 'vue'
+
+const emit = defineEmits(['selectCategory'])
+
+function handleClick(category) {
+  emit('selectCategory', category)
+}
+</script>

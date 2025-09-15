@@ -1,26 +1,47 @@
-// export default defineNuxtRouteMiddleware((to, from) => {
-//   const userToken = process.client ? localStorage.getItem('auth_token') : null
+// middleware/auth.js
+// export default defineNuxtRouteMiddleware((to) => {
+//   const token = useCookie('auth_token')
 
-//   if (!userToken && to.meta.requiresAuth) {
-//     // Not logged in but trying to access a protected page
+//   if (!token.value && to.meta.requiresAuth) {
 //     return navigateTo('/login')
 //   }
 
-//   if (userToken && to.meta.guestOnly) {
-//     // Logged in but trying to access guest-only page (login/register)
-//     return abortNavigation()
+//   if (token.value && to.meta.guestOnly) {
+//     return navigateTo('/')
 //   }
 // })
+import { roleRoutes } from '~/utils/roleRoutes'
 
-// middleware/auth.js
 export default defineNuxtRouteMiddleware((to) => {
-  const token = useCookie('auth_token')
+  const token = useCookie('auth_token').value
 
-  if (!token.value && to.meta.requiresAuth) {
+  // If no token → guest
+  if (!token) {
+    if (to.meta.requiresAuth) return navigateTo('/login')
+    return
+  }
+
+  let userType
+  try {
+    // Manually decode JWT payload
+    const payload = token.split('.')[1] // get the middle part
+    const decodedPayload = JSON.parse(atob(payload))
+    userType = decodedPayload.user_type
+  } catch (e) {
+    console.error('Invalid token', e)
+    useCookie('auth_token').value = null
     return navigateTo('/login')
   }
 
-  if (token.value && to.meta.guestOnly) {
-    return navigateTo('/')
+  const redirectPath = roleRoutes[userType] || '/login'
+
+  // Guest-only page
+  if (to.meta.guestOnly && to.path !== redirectPath) {
+    return navigateTo(redirectPath)
+  }
+
+  // Protected page, prevent access to wrong role
+  if (to.meta.requiresAuth && to.path !== redirectPath) {
+    return navigateTo(redirectPath)
   }
 })

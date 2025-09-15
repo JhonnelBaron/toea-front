@@ -9,7 +9,7 @@
 
 <div class="bg-white p-4 rounded-lg flex-1 flex flex-col shadow-md py-8">
   <p class="text-lg text-center font-light text-white bg-blue-600 rounded-lg p-2 mb-2">
-    🏆 BEST REGIONAL OFFICE - A. Good Governance
+    🏆 BEST REGIONAL OFFICE 
   </p>
 
   <div class="flex flex-row justify-between items-center">
@@ -23,7 +23,7 @@
 
     <!-- Right side button -->
     <div class="mt-2 flex flex-row">
-      <NuxtLink to="/criteria/BRO/dashboard">
+      <NuxtLink to="/executive">
       <button class="bg-blue-600 px-2 py-2 rounded-lg text-xs text-white flex items-center gap-1">
         <svg xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 
@@ -98,12 +98,22 @@
 
 
 <!-- Navigator -->
-<BRONavigator />
+<!-- <BRONavigator /> -->
 
 <!-- GINAWA KO MUNA COMPONENT PARA DI MAHABA -->
-<SampleEvaluationCriteria />
-<SampleEvaluationCriteria />
-<SampleEvaluationCriteria />
+<!-- <EvaluationCriteriaA />
+<EvaluationCriteriaB />
+<EvaluationCriteriaC />
+<EvaluationCriteriaD />
+<EvaluationCriteriaE /> -->
+<BRONavigator @selectCategory="activeTab = $event" />
+
+<!-- Conditionally render each EvaluationCriteria -->
+<EvaluationCriteriaA v-if="activeTab === 'A'" />
+<EvaluationCriteriaB v-else-if="activeTab === 'B'" />
+<EvaluationCriteriaC v-else-if="activeTab === 'C'" />
+<EvaluationCriteriaD v-else-if="activeTab === 'D'" />
+<EvaluationCriteriaE v-else-if="activeTab === 'E'" />
 
 
     </div>
@@ -113,7 +123,14 @@
 
 <script setup>
 import { ref } from 'vue'
+import EvaluationCriteriaA from '~/components/BroEvaluation/EvaluationCriteriaA.vue';
+import EvaluationCriteriaB from '~/components/BroEvaluation/EvaluationCriteriaB.vue';
+import EvaluationCriteriaC from '~/components/BroEvaluation/EvaluationCriteriaC.vue';
+import EvaluationCriteriaD from '~/components/BroEvaluation/EvaluationCriteriaD.vue';
+import EvaluationCriteriaE from '~/components/BroEvaluation/EvaluationCriteriaE.vue';
 import BRONavigator from '~/components/BRONavigator.vue';
-import SampleEvaluationCriteria from '~/components/SampleEvaluationCriteria.vue';
+// import SampleEvaluationCriteria from '~/components/SampleEvaluationCriteria.vue';
 const activeTab = ref('A')
+
+
 </script>

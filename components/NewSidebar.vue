@@ -49,18 +49,18 @@
         <h2 class="text-sm font-bold">
           {{ user ? `${user.first_name} ${user.last_name}` : "Loading..." }}
         </h2>
-        <p class="text-xs text-gray-200">{{ user?.designation }}</p>
-        <p class="text-xs text-gray-300">{{ user?.office }}</p>
+        <!-- <p class="text-xs text-gray-200">{{ user?.designation }}</p>
+        <p class="text-xs text-gray-300">{{ user?.office }}</p> -->
       </div>
 
       <!-- Navigation -->
       <nav class="flex flex-col gap-2">
         <!-- Dashboard -->
-        <NuxtLink to="/criteria/BRO/dashboard">
+        <NuxtLink to="/executive">
           <button
             :class="[
               'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs transition',
-              isActive('/criteria/BRO/dashboard')
+              isActive('/executive')
                 ? 'bg-blue-500 text-white border-b-2 border-amber-400'
                 : 'hover:bg-blue-600'
             ]"
@@ -74,11 +74,11 @@
         </NuxtLink>
 
         <!-- Evaluation -->
-        <NuxtLink to="/criteria/BRO/evaluate">
+        <NuxtLink to="/executive/evaluate">
           <button
             :class="[
               'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs transition',
-              isActive('/criteria/BRO/evaluate')
+              isActive('/executive/evaluate')
                 ? 'bg-blue-500 text-white border-b-2 border-amber-400'
                 : 'hover:bg-blue-600'
             ]"
