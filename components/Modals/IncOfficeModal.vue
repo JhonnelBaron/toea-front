@@ -113,6 +113,8 @@ const officesToFieldMap = {
   'Regional Operations Management Office' : 'romo',
   'Information and Communication Office' : 'icto',
   'World Skills' : 'ws',
+  'Gender and Development TESDA Women Center' : 'gadtwc',
+  'Community-Based Technical Vocational Education and Training Office' : 'cbtveto'
 }
 
 const allOffices = [
@@ -127,6 +129,8 @@ const allOffices = [
   'Regional Operations Management Office',
   'Information and Communication Office',
   'World Skills',
+  'Gender and Development TESDA Women Center',
+  'Community-Based Technical Vocational Education and Training Office'
 ]
 
 const availableOffices = ref([...allOffices])
