@@ -88,26 +88,26 @@
 >
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     <div
-      v-for="region in 16"
-      :key="region"
+      v-for="nominee in nominees"
+      :key="nominee.id"
       class="bg-gradient-to-br from-white to-gray-100 rounded-xl shadow-md p-5 flex flex-col justify-between"
     >
       <!-- Header -->
       <div>
-        <p class="text-sm font-semibold text-gray-800">Region {{ region }}</p>
-        <p class="text-xs text-gray-500">TESDA Office / Small / Medium / Large</p>
+        <p class="text-sm font-semibold text-gray-800">{{ nominee.nominee_name }}</p>
+        <p class="text-xs text-gray-500">  {{ nominee.nominee_category.charAt(0).toUpperCase() + nominee.nominee_category.slice(1) }}  Category</p>
       </div>
 
       <!-- Progress -->
       <div class="mt-4">
         <div class="flex justify-between text-xs mb-1 text-gray-600">
           <span>Evaluation Progress</span>
-          <span>{{ (region * 6) % 100 }}%</span>
+          <span>{{ 40 % 100 }}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
           <div
             class="bg-green-500 h-3 rounded-full transition-all duration-500"
-            :style="{ width: ((region * 6) % 100) + '%' }"
+            :style="{ width: (40 % 100) + '%' }"
           ></div>
         </div>
       </div>
@@ -116,14 +116,16 @@
       <div class="flex justify-between items-center mt-4">
         <!-- Go to Evaluation -->
         <button
+          @click="goToEvaluation(nominee.id)"
           class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-2 rounded-lg shadow-md"
         >
           Go to Evaluation
         </button>
 
         <!-- Remarks icons -->
-        <div class="flex items-center space-x-2 text-gray-600">
+        <!-- <div class="flex items-center space-x-2 text-gray-600">
           <button
+          
             class="hover:text-blue-500"
             title="View Remarks"
           >
@@ -135,7 +137,7 @@
           >
             <PencilSquareIcon class="h-5 w-5" />
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -146,7 +148,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+const { $api } = useNuxtApp()
 import SidebarAdmin from '~/components/SidebarAdmin.vue'
 import CriteriaNavigator from '~/components/CriteriaNavigator.vue'
 
@@ -174,5 +178,29 @@ const getComponent = (tabName) => {
       return CriteriaA
   }
 }
+
+const router = useRouter()
+
+const goToEvaluation = (id) => {
+  router.push(`/executive/evaluate/${id}`)
+}
+
+const nominees = ref([])
+
+// Fetch nominees on component mount
+const fetchNominees = async () => {
+  try {
+    const response = await $api.get('/dashboard/bro-nominees') // <-- fixed variable name
+    if (response.data.status === 200) {
+      nominees.value = response.data.data
+    }
+  } catch (error) {
+    console.error('Error fetching nominees:', error)
+  }
+}
+
+onMounted(() => {
+  fetchNominees()
+})
 
 </script>

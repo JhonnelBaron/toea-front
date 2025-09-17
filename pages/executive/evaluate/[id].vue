@@ -17,7 +17,7 @@
     <div class="flex flex-col text-start mt-2">
       <div class="font-light text-sm text-gray-700">You are Evaluating:</div>
       <div class="text-gray-600 text-xl font-semibold">
-        TESDA Regional Office III
+        TESDA {{ nominee?.nominee_name || 'Loading...' }}
       </div>
     </div>
 
@@ -122,7 +122,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import EvaluationCriteriaA from '~/components/BroEvaluation/EvaluationCriteriaA.vue';
 import EvaluationCriteriaB from '~/components/BroEvaluation/EvaluationCriteriaB.vue';
 import EvaluationCriteriaC from '~/components/BroEvaluation/EvaluationCriteriaC.vue';
@@ -131,6 +132,27 @@ import EvaluationCriteriaE from '~/components/BroEvaluation/EvaluationCriteriaE.
 import BRONavigator from '~/components/BRONavigator.vue';
 // import SampleEvaluationCriteria from '~/components/SampleEvaluationCriteria.vue';
 const activeTab = ref('A')
+const { $api } = useNuxtApp()
+const route = useRoute();
+const nominee = ref(null)
+
+const fetchNominee = async () => {
+  console.log('Fetching nominee with id:', route.params.id)
+  try {
+    const res = await $api.get(`/nominee/${route.params.id}`)
+    console.log('API response:', res.data)
+    if (res.data.status === 200) {
+      nominee.value = res.data.data
+    } else {
+      console.warn('Nominee not found or API error')
+    }
+  } catch (error) {
+    console.error('Error fetching nominee:', error)
+  }
+}
 
 
+onMounted(() => {
+  fetchNominee()
+})
 </script>

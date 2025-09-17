@@ -74,7 +74,7 @@
         </NuxtLink>
 
         <!-- Evaluation -->
-        <NuxtLink to="/executive/evaluate">
+        <!-- <NuxtLink to="/executive/evaluate">
           <button
             :class="[
               'w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 font-medium text-xs transition',
@@ -89,7 +89,7 @@
 
             Evaluation
           </button>
-        </NuxtLink>
+        </NuxtLink> -->
       </nav>
 
       <!-- Spacer -->

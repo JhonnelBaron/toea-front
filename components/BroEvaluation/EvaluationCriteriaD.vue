@@ -34,7 +34,7 @@
 
             <!-- Scoring Options -->
             <div>
-              <span class="text-sm font-light">Available Scoring Options:</span>
+              <span class="text-sm font-light">Rubrics</span>
               <div class="flex flex-col gap-2 mt-2">
                 <label v-for="requirement in criteria.d_requirements" :key="requirement.id" class="flex items-center gap-2">
                   <span class="text-sm border flex-1 p-2 border-gray-300">
@@ -52,46 +52,73 @@
             <!-- Dropdown -->
             <div>
               <label class="text-sm font-light block mb-1">Select Score:</label>
-              <select class="w-full border rounded-md p-2 text-sm border-gray-300">
+              <select v-model="form[criteria.id].score" @change="submitScore(criteria)"  class="w-full border rounded-md p-2 text-sm border-gray-300">
                 <option value="">Choose...</option>
-                <option v-for="requirement in criteria.d_requirements" :key="'score-'+requirement.id">
+                <option v-for="requirement in criteria.d_requirements" :key="'score-'+requirement.id" :value="requirement.point_value">
                   {{ requirement.point_value }} - {{ requirement.requirement_description }}
                 </option>
               </select>
             </div>
 
 <label class="text-sm font-light block mb-1">Supporting Evidence</label>
+  <div v-if="form[criteria.id].attachmentPath" class="text-sm text-blue-600 cursor-pointer hover:underline"
+       @click="$refs.fileInput[criteria.id].click()">
+    Choose another file
+  </div>
 <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm flex flex-col gap-3">
 
-  <!-- Upload -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+   
+  <!-- Upload + Filename + View button -->
+  <div class="flex items-center gap-2 w-full">
+    <!-- File input: show only if no file -->
+  <label 
+    v-if="!form[criteria.id].attachmentPath"
+    class="flex-1 border border-gray-300 rounded-md p-2 text-sm text-gray-500 cursor-pointer flex items-center gap-2"
+  >
+    <!-- Attachment icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828a4 4 0 10-5.656-5.656l-6.586 6.586a6 6 0 108.486 8.486L20 12.828" />
+    </svg>
+    Attach file
     <input 
       type="file" 
-      @change="handleFileUpload" 
-      class="text-sm border border-gray-300 rounded-md p-2 w-full sm:w-auto"
+      class="hidden" 
+      @change="(e) => { handleFileUpload(e, criteria.id); submitScore(criteria) }"
     />
-    <span v-if="uploadedFileName" class="text-sm font-medium text-gray-700 truncate">
-      {{ uploadedFileName }}
-    </span>
-  </div>
+  </label>
 
-  <!-- View File Button -->
-  <button 
-    v-if="uploadedFileUrl" 
-    @click="viewFile" 
-    class="self-start bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md flex items-center gap-2"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-      <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.173 8z"/>
-      <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-    </svg>
-    View File
-  </button>
+    <!-- File name -->
+    <span v-if="form[criteria.id].attachmentName" class="text-sm font-medium text-gray-700 truncate flex-1">
+      {{ form[criteria.id].attachmentName }}
+    </span>
+
+    <!-- View File button -->
+<button 
+  v-if="form[criteria.id].attachmentPath" 
+  @click="openFilePopup(form[criteria.id].attachmentPath, form[criteria.id].attachmentType)" 
+  class="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm p-0 relative group"
+>
+  <!-- Eye SVG icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+
+  <!-- Text -->
+  <span>View</span>
+
+  <!-- Tooltip showing full file name -->
+  <span class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-50 transition-opacity">
+    {{ form[criteria.id].attachmentName }}
+  </span>
+</button>
+
+  </div>
 </div>
         <!-- Evaluation Remarks -->
         <div>
           <label class="text-sm font-light block mb-1">Evaluation Remarks:</label>
-          <textarea class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
+          <textarea v-model="form[criteria.id].remarks" @blur="submitScore(criteria)" class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
         </div>
           </div>
 
@@ -102,43 +129,130 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 const { $api } = useNuxtApp()
+import { useRoute } from 'vue-router'
 
+const BASE_URL = 'http://localhost:8000/storage';
 const dCriterias = ref([])
+const form = reactive({})   // ✅ make form reactive
+const route = useRoute()
+
+function openFilePopup(path, type) {
+  if (!path) return
+
+  // Set window size & position
+  const width = 1000
+  const height = 700
+  const left = (window.screen.width - width) / 2
+  const top = (window.screen.height - height) / 2
+
+  // Open a new browser window
+  const popup = window.open(
+    '',                  // leave URL blank, we’ll write content dynamically
+    '_blank',
+    `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+  )
+
+  // Write content inside the new window
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>File Viewer</title>
+        <style>
+          html, body { margin:0; padding:0; width:100%; height:100%; overflow:auto; display:flex; justify-content:center; align-items:center; background:#f9f9f9; }
+          iframe, img { max-width: 100%; max-height: 100%; }
+        </style>
+      </head>
+      <body>
+        ${
+          type?.includes('pdf')
+            ? `<iframe src="${path}" width="100%" height="100%" style="border:none;"></iframe>`
+            : type?.includes('image')
+            ? `<img src="${path}" />`
+            : `<p style="font-family:sans-serif;">Cannot preview this file type.</p>`
+        }
+      </body>
+    </html>
+  `
+
+  popup.document.write(htmlContent)
+  popup.document.close()
+}
 
 onMounted(async () => {
   try {
-    const res = await $api.get('/criteria/d') // no need for Authorization header, cookie is sent automatically
+    const res = await $api.get('/criteria/d')
     dCriterias.value = res.data.data
+
+    // ✅ initialize form after criterias are loaded
+    dCriterias.value.forEach(c => {
+      form[c.id] = {
+        score: '',
+        remarks: '',
+        attachment: null,
+        attachmentName: '',
+  attachmentPath: null,
+  attachmentType: null,
+  showFile: false // <-- new
+      }
+    })
+
+     // 3. fetch saved scores for this nominee
+    const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
+    const scores = scoresRes.data.data
+
+    // 4. map saved scores into form (only A criteria)
+    scores.forEach(s => {
+      if (s.criteria_table === 'd_criterias' && form[s.criteria_id]) {
+        form[s.criteria_id].score = s.score
+        form[s.criteria_id].remarks = s.remarks || ''
+        form[s.criteria_id].attachmentName = s.attachment_name || ''
+        form[s.criteria_id].attachmentPath = s.attachment_path
+          ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}` // replace backslashes
+          : null
+        form[s.criteria_id].attachmentType = s.attachment_type || null
+      }
+    })
   } catch (err) {
-    console.error('Failed to fetch B criteria:', err)
+    console.error('Failed to fetch D criteria:', err)
   }
 })
 
-const uploadedFileName = ref(null)
-const uploadedFileUrl = ref(null)
-
-function handleFileUpload(event) {
+function handleFileUpload(event, criteriaId) {
   const file = event.target.files[0]
-  if (!file) return
+  if (file) {
+    form[criteriaId].attachment = file
+    form[criteriaId].attachmentName = file.name
 
-  uploadedFileName.value = file.name
+        // Immediately set a local path to show the View button
+    form[criteriaId].attachmentPath = URL.createObjectURL(file)
 
-  // Create a temporary URL for viewing
-  uploadedFileUrl.value = URL.createObjectURL(file)
-
-  // Optional: you can upload the file to the backend here via Axios
-  // const formData = new FormData()
-  // formData.append('file', file)
-  // await axios.post('/upload', formData)
+    // Set MIME type
+    form[criteriaId].attachmentType = file.type
+  }
 }
 
-function viewFile() {
-  if (uploadedFileUrl.value) {
-    window.open(uploadedFileUrl.value, '_blank')
+function viewFile(path) {
+  if (path) window.open(path, '_blank')
+}
+
+async function submitScore(criteria) {
+  const fd = new FormData()
+  fd.append('nominee_id', route.params.id)
+  fd.append('criteria_table', 'd_criterias')
+  fd.append('criteria_id', criteria.id)
+  fd.append('score', form[criteria.id].score)
+  fd.append('remarks', form[criteria.id].remarks)
+  if (form[criteria.id].attachment) {
+    fd.append('attachment', form[criteria.id].attachment)
   }
+
+  await $api.post('/score', fd, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }
 
 </script>
