@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     }
   },
     nitro: {
+    preset: 'static', // ✅ Make sure Nitro outputs static assets
     prerender: {
       crawlLinks: true,
       failOnError: false,   // don’t stop the build if a route fails
