@@ -1,6 +1,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
+  ssr: false, // 🚀 Disable SSR (use SPA/static mode)
+  target: 'static', // 🚀 Explicitly static
   css: ['~/assets/css/main.css'],
   modules: ['@nuxtjs/tailwindcss'],
   plugins: ['~/plugins/axios.js'],
