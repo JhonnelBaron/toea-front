@@ -133,9 +133,9 @@ import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 const { $api } = useNuxtApp()
 import { useRoute } from 'vue-router'
-import { BASE_URL } from '~/utils/constants.js'
 
-// const BASE_URL = 'http://localhost:8000/storage';
+
+const BASE_URL = 'http://localhost:8000/storage';
 const dCriterias = ref([])
 const form = reactive({})   // ✅ make form reactive
 const route = useRoute()
