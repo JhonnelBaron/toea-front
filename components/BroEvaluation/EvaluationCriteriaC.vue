@@ -52,7 +52,7 @@
             <!-- Dropdown -->
             <div>
               <label class="text-sm font-light block mb-1">Select Score:</label>
-              <select v-model="form[criteria.id].score" @change="submitScore(criteria)" class="w-full border rounded-md p-2 text-sm border-gray-300">
+              <select v-model="form[criteria.id].score" @change="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
                 <option value="">Choose...</option>
                 <option v-for="requirement in criteria.c_requirements" :key="'score-'+requirement.id" :value="requirement.point_value">
                   {{ requirement.point_value }} - {{ requirement.requirement_description }}
@@ -61,10 +61,10 @@
             </div>
 
 <label class="text-sm font-light block mb-1">Supporting Evidence</label>
-  <div v-if="form[criteria.id].attachmentPath" class="text-sm text-blue-600 cursor-pointer hover:underline"
+  <!-- <div v-if="form[criteria.id].attachmentPath" class="text-sm text-blue-600 cursor-pointer hover:underline"
        @click="$refs.fileInput[criteria.id].click()">
     Choose another file
-  </div>
+  </div> -->
 <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm flex flex-col gap-3">
 
  <!-- Upload + Filename + View button -->
@@ -82,6 +82,7 @@
     <input 
       type="file" 
       class="hidden" 
+      :disabled="isDone"
       @change="(e) => { handleFileUpload(e, criteria.id); submitScore(criteria) }"
     />
   </label>
@@ -117,7 +118,7 @@
         <!-- Evaluation Remarks -->
         <div>
           <label class="text-sm font-light block mb-1">Evaluation Remarks:</label>
-          <textarea v-model="form[criteria.id].remarks" @blur="submitScore(criteria)" class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
+          <textarea v-model="form[criteria.id].remarks" @blur="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
         </div>
           </div>
 
@@ -138,7 +139,10 @@ import { BASE_URL } from '~/utils/constants.js'
 const cCriterias = ref([])
 const form = reactive({})   // ✅ make form reactive
 const route = useRoute()
-
+defineProps({
+  isDone: Boolean,
+  form: Object
+});
 function openFilePopup(path, type) {
   if (!path) return
 

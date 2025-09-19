@@ -85,12 +85,20 @@
     class="absolute -right-18 -bottom-10 w-60 h-60 opacity-30 pointer-events-none select-none object-contain" 
   />
 
-  <p class="text-lg font-light mb-2 relative z-10">Done Evaluating?</p>
-  <button
-    class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out relative z-10"
-  >
-    ✅ Mark as Done
-  </button>
+<p v-if="!isDone" class="text-lg font-light mb-2 relative z-10">
+  Done Evaluating?
+</p>
+<button
+  :disabled="isDone"
+  @click="confirmMarkAsDone"
+  class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 
+         text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300 ease-in-out
+         relative z-10 disabled:opacity-50 disabled:cursor-not-allowed
+         w-full text-center"
+>
+  ✅ {{ isDone ? 'Submitted' : 'Mark as Done' }}
+</button>
+
 </div>
 
 
@@ -99,11 +107,11 @@
 <BRONavigator :availableCategories="availableCategories" @selectCategory="activeTab = $event" />
 
 <!-- Conditionally render each EvaluationCriteria -->
-<EvaluationCriteriaA v-if="activeTab === 'A'" />
-<EvaluationCriteriaB v-else-if="activeTab === 'B'" />
-<EvaluationCriteriaC v-else-if="activeTab === 'C'" />
-<EvaluationCriteriaD v-else-if="activeTab === 'D'" />
-<EvaluationCriteriaE v-else-if="activeTab === 'E'" />
+<EvaluationCriteriaA v-if="activeTab === 'A'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaB v-else-if="activeTab === 'B'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaC v-else-if="activeTab === 'C'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaD v-else-if="activeTab === 'D'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaE v-else-if="activeTab === 'E'" :isDone="isDone" :form="form"/>
 
 
     </div>
@@ -125,6 +133,7 @@ const activeTab = ref('')
 const { $api } = useNuxtApp()
 const route = useRoute();
 const nominee = ref(null)
+const form = reactive({});
 
 // Track which categories are available
 const availableCategories = ref({
@@ -134,6 +143,8 @@ const availableCategories = ref({
   D: false,
   E: false,
 })
+
+const isDone = ref(false) // ✅ new state
 
 const fetchNominee = async () => {
   try {
@@ -175,30 +186,61 @@ const fetchCriterias = async () => {
     console.error('Error fetching criterias:', err)
   }
 }
+const fetchDoneStatus = async () => {
+  try {
+    const res = await $api.get(`/scores-done/nominee/${route.params.id}`)
+    if (res.data.status === 200) {
+      isDone.value = res.data.data.status === 'done'
+    }
+  } catch (err) {
+    console.error('Error fetching done status:', err)
+  }
+}
 
 onMounted(async () => {
   await fetchNominee()
   await fetchCriterias()
+  await fetchDoneStatus() 
 })
 
+const markAsDone = async () => {
+  try {
+    const res = await $api.post(`/scores-done/nominee/${route.params.id}`)
+    if (res.data.status === 200) {
+      isDone.value = true
+      console.log(res.data.message) // Scores marked as done
+    }
+  } catch (err) {
+    console.error('Error marking as done:', err)
+  }
+}
 
-// const fetchNominee = async () => {
-//   console.log('Fetching nominee with id:', route.params.id)
-//   try {
-//     const res = await $api.get(`/nominee/${route.params.id}`)
-//     console.log('API response:', res.data)
-//     if (res.data.status === 200) {
-//       nominee.value = res.data.data
-//     } else {
-//       console.warn('Nominee not found or API error')
-//     }
-//   } catch (error) {
-//     console.error('Error fetching nominee:', error)
-//   }
-// }
+const confirmMarkAsDone = async () => {
+  if (isDone.value) return;
 
+  // 1. Check if any criteria are not scored
+  const incomplete = Object.values(form).some(f => !f.score);
+  if (incomplete) {
+    alert("You cannot submit yet. Some criteria are not scored.");
+    return;
+  }
 
-// onMounted(() => {
-//   fetchNominee()
-// })
+  // 2. Ask for confirmation
+  const confirmed = window.confirm(
+    "Once submitted, you will not be able to modify your scores. Are you sure you want to submit?"
+  );
+  if (!confirmed) return;
+
+  // 3. Submit scores as done
+  try {
+    const res = await $api.post(`/scores-done/nominee/${route.params.id}`);
+    if (res.data.status === 200) {
+      isDone.value = true;
+      console.log(res.data.message);
+    }
+  } catch (err) {
+    console.error('Error marking as done:', err);
+  }
+};
+
 </script>
