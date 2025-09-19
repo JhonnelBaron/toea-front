@@ -96,17 +96,7 @@
 
 </div>
 
-
-<!-- Navigator -->
-<!-- <BRONavigator /> -->
-
-<!-- GINAWA KO MUNA COMPONENT PARA DI MAHABA -->
-<!-- <EvaluationCriteriaA />
-<EvaluationCriteriaB />
-<EvaluationCriteriaC />
-<EvaluationCriteriaD />
-<EvaluationCriteriaE /> -->
-<BRONavigator @selectCategory="activeTab = $event" />
+<BRONavigator :availableCategories="availableCategories" @selectCategory="activeTab = $event" />
 
 <!-- Conditionally render each EvaluationCriteria -->
 <EvaluationCriteriaA v-if="activeTab === 'A'" />
@@ -131,16 +121,23 @@ import EvaluationCriteriaD from '~/components/BroEvaluation/EvaluationCriteriaD.
 import EvaluationCriteriaE from '~/components/BroEvaluation/EvaluationCriteriaE.vue';
 import BRONavigator from '~/components/BRONavigator.vue';
 // import SampleEvaluationCriteria from '~/components/SampleEvaluationCriteria.vue';
-const activeTab = ref('A')
+const activeTab = ref('')
 const { $api } = useNuxtApp()
 const route = useRoute();
 const nominee = ref(null)
 
+// Track which categories are available
+const availableCategories = ref({
+  A: false,
+  B: false,
+  C: false,
+  D: false,
+  E: false,
+})
+
 const fetchNominee = async () => {
-  console.log('Fetching nominee with id:', route.params.id)
   try {
     const res = await $api.get(`/nominee/${route.params.id}`)
-    console.log('API response:', res.data)
     if (res.data.status === 200) {
       nominee.value = res.data.data
     } else {
@@ -151,8 +148,57 @@ const fetchNominee = async () => {
   }
 }
 
+const fetchCriterias = async () => {
+  try {
+    const resA = await $api.get(`/criteria/a?nominee_id=${route.params.id}`)
+    availableCategories.value.A = resA.data.data.length > 0
 
-onMounted(() => {
-  fetchNominee()
+    const resB = await $api.get(`/criteria/b?nominee_id=${route.params.id}`)
+    availableCategories.value.B = resB.data.data.length > 0
+
+    const resC = await $api.get(`/criteria/c?nominee_id=${route.params.id}`)
+    availableCategories.value.C = resC.data.data.length > 0
+
+    const resD = await $api.get(`/criteria/d?nominee_id=${route.params.id}`)
+    availableCategories.value.D = resD.data.data.length > 0
+
+    const resE = await $api.get(`/criteria/e?nominee_id=${route.params.id}`)
+    availableCategories.value.E = resE.data.data.length > 0
+
+    // auto-select first available tab
+    const firstAvailable = Object.keys(availableCategories.value)
+      .find(k => availableCategories.value[k])
+    if (firstAvailable) {
+      activeTab.value = firstAvailable
+    }
+  } catch (err) {
+    console.error('Error fetching criterias:', err)
+  }
+}
+
+onMounted(async () => {
+  await fetchNominee()
+  await fetchCriterias()
 })
+
+
+// const fetchNominee = async () => {
+//   console.log('Fetching nominee with id:', route.params.id)
+//   try {
+//     const res = await $api.get(`/nominee/${route.params.id}`)
+//     console.log('API response:', res.data)
+//     if (res.data.status === 200) {
+//       nominee.value = res.data.data
+//     } else {
+//       console.warn('Nominee not found or API error')
+//     }
+//   } catch (error) {
+//     console.error('Error fetching nominee:', error)
+//   }
+// }
+
+
+// onMounted(() => {
+//   fetchNominee()
+// })
 </script>

@@ -154,8 +154,8 @@ const mapCriteriaToOffices = (criteria) => {
   if (criteria.planning) offices.push('Planning Office')
   if (criteria.plo) offices.push('Partnership and Linkages Office')
   if (criteria.romo) offices.push('Regional Operations Management Office')
-  if (criteria.icto) offices.push('Information and Communication Office')
-  if (criteria.ws) offices.push('World Skills')
+  if (criteria.icto) offices.push('Information and Communication Technology Office')
+  if (criteria.ws) offices.push('WorldSkills')
   if (criteria.gadtwc) offices.push('Gender and Development TESDA Women Center')
   if (criteria.cbtveto) offices.push('Community-Based Technical Vocational Education and Training Office')
 

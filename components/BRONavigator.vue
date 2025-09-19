@@ -33,8 +33,14 @@
     <!-- Card A -->
     <div
       @click="handleClick('A')"
-      class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
-    >
+              class="relative group"
+ :class="[
+          'p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] transition duration-300',
+          availableCategories.A
+            ? 'cursor-pointer bg-gray-50 hover:scale-105 hover:bg-blue-50'
+            : 'cursor-not-allowed bg-gray-200 opacity-50'
+        ]"
+      >
       <div class="flex items-center gap-3">
         <!-- Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
@@ -48,6 +54,13 @@
           <h3 class="text-sm font-light text-gray-700">Category A</h3>
           <p class="text-sm font-semibold text-gray-700">Good Governance</p>
         </div>
+           <!-- Tooltip only for disabled -->
+        <span
+          v-if="!props.availableCategories.A"
+          class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+        >
+          Your office has no criteria to evaluate in this category
+        </span>
       </div>
 
       <svg
@@ -65,8 +78,14 @@
     <!-- Card B -->
     <div
       @click="handleClick('B')"
-      class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
-    >
+              class="relative group"
+ :class="[
+          'p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] transition duration-300',
+          availableCategories.B
+            ? 'cursor-pointer bg-gray-50 hover:scale-105 hover:bg-blue-50'
+            : 'cursor-not-allowed bg-gray-200 opacity-50'
+        ]"
+      >
       <div class="flex items-center gap-3">
         <!-- Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -79,6 +98,13 @@
           <h3 class="text-sm font-light text-gray-700">Category B</h3>
           <p class="text-sm font-semibold text-gray-700">TESD Programs</p>
         </div>
+           <!-- Tooltip only for disabled -->
+        <span
+          v-if="!props.availableCategories.B"
+          class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+        >
+          Your office has no criteria to evaluate in this category
+        </span>
       </div>
 
       <svg
@@ -96,8 +122,14 @@
     <!-- Card C -->
     <div
       @click="handleClick('C')"
-      class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
-    >
+              class="relative group"
+ :class="[
+          'p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] transition duration-300',
+          availableCategories.C
+            ? 'cursor-pointer bg-gray-50 hover:scale-105 hover:bg-blue-50'
+            : 'cursor-not-allowed bg-gray-200 opacity-50'
+        ]"
+      >
       <div class="flex items-center gap-3">
         <!-- Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -111,6 +143,13 @@
           <h3 class="text-sm font-light text-gray-700">Category C</h3>
           <p class="text-sm font-semibold text-gray-700">Admin Support</p>
         </div>
+           <!-- Tooltip only for disabled -->
+        <span
+          v-if="!props.availableCategories.C"
+          class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+        >
+          Your office has no criteria to evaluate in this category
+        </span>
       </div>
 
       <svg
@@ -128,8 +167,14 @@
     <!-- Card D -->
     <div
       @click="handleClick('D')"
-      class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
-    >
+              class="relative group"
+ :class="[
+          'p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] transition duration-300',
+          availableCategories.D
+            ? 'cursor-pointer bg-gray-50 hover:scale-105 hover:bg-blue-50'
+            : 'cursor-not-allowed bg-gray-200 opacity-50'
+        ]"
+      >
       <div class="flex items-center gap-3">
         <!-- Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -142,6 +187,13 @@
           <h3 class="text-sm font-light text-gray-700">Category D</h3>
           <p class="text-sm font-semibold text-gray-700">Reporting</p>
         </div>
+           <!-- Tooltip only for disabled -->
+        <span
+          v-if="!props.availableCategories.D"
+          class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+        >
+          Your office has no criteria to evaluate in this category
+        </span>
       </div>
 
       <svg
@@ -159,8 +211,14 @@
     <!-- Card E -->
     <div
       @click="handleClick('E')"
-      class="bg-gray-50 p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:bg-blue-50"
-    >
+              class="relative group"
+ :class="[
+          'p-4 rounded-lg shadow-md flex items-center justify-between flex-1 min-w-[200px] transition duration-300',
+          availableCategories.E
+            ? 'cursor-pointer bg-gray-50 hover:scale-105 hover:bg-blue-50'
+            : 'cursor-not-allowed bg-gray-200 opacity-50'
+        ]"
+      >
       <div class="flex items-center gap-3">
         <!-- Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -172,6 +230,13 @@
           <h3 class="text-sm font-light text-gray-700">Category E</h3>
           <p class="text-sm font-semibold text-gray-700">Social Marketing</p>
         </div>
+           <!-- Tooltip only for disabled -->
+        <span
+          v-if="!props.availableCategories.E"
+          class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+        >
+          Your office has no criteria to evaluate in this category
+        </span>
       </div>
 
       <svg
@@ -191,11 +256,27 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
+// import { defineEmits } from 'vue'
+
+// const emit = defineEmits(['selectCategory'])
+
+// function handleClick(category) {
+//   emit('selectCategory', category)
+// }
+import { defineEmits, defineProps } from 'vue'
+
+const props = defineProps({
+  availableCategories: {
+    type: Object,
+    required: true
+  }
+})
 
 const emit = defineEmits(['selectCategory'])
 
 function handleClick(category) {
-  emit('selectCategory', category)
+  if (props.availableCategories[category]) {
+    emit('selectCategory', category)
+  }
 }
 </script>

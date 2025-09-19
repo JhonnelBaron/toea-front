@@ -56,8 +56,8 @@
       </form>
 
       <p class="text-sm text-gray-600 flex items-center justify-center pt-10">
-        Don't have an account?
-        <NuxtLink class="text-blue-600 hover:underline ml-1" to="/register">Sign up</NuxtLink>
+        <!-- Don't have an account?
+        <NuxtLink class="text-blue-600 hover:underline ml-1" to="/register">Sign up</NuxtLink> -->
       </p>
     </div>
   </div>
