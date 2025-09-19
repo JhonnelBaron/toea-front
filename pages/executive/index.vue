@@ -10,7 +10,7 @@
     <div class="flex flex-col items-center justify-center text-center mt-2">
       <div class="font-light text-sm text-gray-700">Welcome to your Dashboard!</div>
       <div class=" text-gray-600 text-sm">
-        Regional Operations and Management Office
+    
       </div>
     </div>
   </div>
