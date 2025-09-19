@@ -46,7 +46,7 @@
           alt="Profile"
           class="w-24 h-24 rounded-full object-cover border-4 border-gray-300 mb-4"
         />
-        <h2 class="text-sm font-bold">
+        <h2 class="text-sm font-bold text-center">
           {{ user ? `${user.first_name} ${user.last_name}` : "Loading..." }}
         </h2>
         <!-- <p class="text-xs text-gray-200">{{ user?.designation }}</p>

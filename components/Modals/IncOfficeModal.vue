@@ -111,8 +111,8 @@ const officesToFieldMap = {
   'Planning Office': 'planning',
   'Partnership and Linkages Office' : 'plo',
   'Regional Operations Management Office' : 'romo',
-  'Information and Communication Office' : 'icto',
-  'World Skills' : 'ws',
+  'Information and Communication Technology Office' : 'icto',
+  'WorldSkills' : 'ws',
   'Gender and Development TESDA Women Center' : 'gadtwc',
   'Community-Based Technical Vocational Education and Training Office' : 'cbtveto'
 }
@@ -127,8 +127,8 @@ const allOffices = [
   'Planning Office',
   'Partnership and Linkages Office',
   'Regional Operations Management Office',
-  'Information and Communication Office',
-  'World Skills',
+  'Information and Communication Technology Office',
+  'WorldSkills',
   'Gender and Development TESDA Women Center',
   'Community-Based Technical Vocational Education and Training Office'
 ]
@@ -246,3 +246,4 @@ const saveOffices = async () => {
   opacity: 0;
 }
 </style>
+
