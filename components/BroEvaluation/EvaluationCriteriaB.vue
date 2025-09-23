@@ -4,7 +4,8 @@
       <span class="text-md font-medium p-2">B. Implementation of TESD Programs</span>
 
       <!-- Loop over B criterias -->
-      <div v-for="criteria in bCriterias" :key="criteria.id" class="mb-6">
+      <!-- <div v-for="criteria in bCriterias" :key="criteria.id" class="mb-6"> -->
+      <div v-for="criteria in filteredCriterias" :key="criteria.id" class="mb-6">
 
         <!-- Header Card -->
         <div class="flex flex-row bg-blue-950 text-white p-4 rounded-t-md">
@@ -141,7 +142,8 @@ const bCriterias = ref([])
 const route = useRoute()
 const props = defineProps({
   isDone: Boolean,
-  form: Object
+  form: Object,
+  nominee: Object,
 });
 function openFilePopup(path, type) {
   if (!path) return
@@ -186,13 +188,26 @@ function openFilePopup(path, type) {
   popup.document.close()
 }
 
+// 🔑 filter criterias by nominee category
+const filteredCriterias = computed(() => {
+  if (!props.nominee) return []
+  const category = props.nominee.nominee_category
+  return bCriterias.value.filter(c => {
+    if (category === 'small') return c.bro_small === 1
+    if (category === 'medium') return c.bro_medium === 1
+    if (category === 'large') return c.bro_large === 1
+    return false
+  })
+})
+
+
 onMounted(async () => {
   try {
     const res = await $api.get('/criteria/b')
     bCriterias.value = res.data.data
 
     // ✅ initialize form after criterias are loaded
-    bCriterias.value.forEach(c => {
+    filteredCriterias.value.forEach(c => {
       const key = `B-${c.id}`
       if (!props.form[key]) {
         props.form[key] = {

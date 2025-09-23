@@ -108,7 +108,7 @@
 
 <!-- Conditionally render each EvaluationCriteria -->
 <EvaluationCriteriaA v-if="activeTab === 'A'" :isDone="isDone" :form="form"/>
-<EvaluationCriteriaB v-else-if="activeTab === 'B'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaB v-else-if="activeTab === 'B'" :isDone="isDone" :form="form" :nominee="nominee"/>
 <EvaluationCriteriaC v-else-if="activeTab === 'C'" :isDone="isDone" :form="form"/>
 <EvaluationCriteriaD v-else-if="activeTab === 'D'" :isDone="isDone" :form="form"/>
 <EvaluationCriteriaE v-else-if="activeTab === 'E'" :isDone="isDone" :form="form"/>
