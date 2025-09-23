@@ -50,9 +50,9 @@
           <div class="bg-gray-100 p-4 rounded-md flex flex-col gap-4 w-85">
 
             <!-- Dropdown -->
-            <div>
+            <div v-if="props.form[`E-${criteria.id}`]">
               <label class="text-sm font-light block mb-1">Select Score:</label>
-              <select v-model="form[criteria.id].score" @change="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
+              <select v-model="props.form[`E-${criteria.id}`].score" @change="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
                 <option value="">Choose...</option>
                 <option v-for="requirement in criteria.e_requirements" :key="'score-'+requirement.id" :value="requirement.point_value">
                   {{ requirement.point_value }} - {{ requirement.requirement_description }}
@@ -65,14 +65,14 @@
        @click="$refs.fileInput[criteria.id].click()">
     Choose another file
   </div> -->
-<div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm flex flex-col gap-3">
+<div v-if="props.form[`E-${criteria.id}`]" class="border border-gray-300 rounded-md p-4 bg-white shadow-sm flex flex-col gap-3">
 
     
   <!-- Upload + Filename + View button -->
   <div class="flex items-center gap-2 w-full">
     <!-- File input: show only if no file -->
   <label 
-    v-if="!form[criteria.id].attachmentPath"
+    v-if="!props.form[`E-${criteria.id}`].attachmentPath"
     class="flex-1 border border-gray-300 rounded-md p-2 text-sm text-gray-500 cursor-pointer flex items-center gap-2"
   >
     <!-- Attachment icon -->
@@ -89,14 +89,14 @@
   </label>
 
     <!-- File name -->
-    <span v-if="form[criteria.id].attachmentName" class="text-sm font-medium text-gray-700 truncate flex-1">
-      {{ form[criteria.id].attachmentName }}
+    <span v-if="props.form[`E-${criteria.id}`].attachmentName" class="text-sm font-medium text-gray-700 truncate flex-1">
+      {{ props.form[`E-${criteria.id}`].attachmentName }}
     </span>
 
     <!-- View File button -->
 <button 
-  v-if="form[criteria.id].attachmentPath" 
-  @click="openFilePopup(form[criteria.id].attachmentPath, form[criteria.id].attachmentType)" 
+  v-if="props.form[`E-${criteria.id}`].attachmentPath" 
+  @click="openFilePopup(props.form[`E-${criteria.id}`].attachmentPath, props.form[`E-${criteria.id}`].attachmentType)" 
   class="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm p-0 relative group"
 >
   <!-- Eye SVG icon -->
@@ -110,16 +110,16 @@
 
   <!-- Tooltip showing full file name -->
   <span class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-50 transition-opacity">
-    {{ form[criteria.id].attachmentName }}
+    {{ props.form[`E-${criteria.id}`].attachmentName }}
   </span>
 </button>
 
   </div>
 </div>
         <!-- Evaluation Remarks -->
-        <div>
+        <div v-if="props.form[`E-${criteria.id}`]">
           <label class="text-sm font-light block mb-1">Evaluation Remarks:</label>
-          <textarea  v-model="form[criteria.id].remarks" @blur="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
+          <textarea  v-model="props.form[`E-${criteria.id}`].remarks" @blur="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300" rows="3" placeholder="Enter remarks..."></textarea>
         </div>
           </div>
 
@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 const { $api } = useNuxtApp()
 import { useRoute } from 'vue-router'
@@ -138,9 +138,9 @@ import { BASE_URL } from '~/utils/constants.js'
 
 // const BASE_URL = 'http://localhost:8000/storage';
 const eCriterias = ref([])
-const form = reactive({})   // ✅ make form reactive
+// const form = reactive({})   // ✅ make form reactive
 const route = useRoute()
-defineProps({
+const props = defineProps({
   isDone: Boolean,
   form: Object
 });
@@ -193,14 +193,17 @@ onMounted(async () => {
 
     // ✅ initialize form after criterias are loaded
     eCriterias.value.forEach(c => {
-      form[c.id] = {
-        score: '',
-        remarks: '',
-        attachment: null,
-        attachmentName: '',
-  attachmentPath: null,
-  attachmentType: null,
-  showFile: false // <-- new
+      const key = `E-${c.id}`
+      if (!props.form[key]) {
+        props.form[key] = {
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false
+        }
       }
     })
 
@@ -210,15 +213,18 @@ onMounted(async () => {
 
     // 4. map saved scores into form (only A criteria)
     scores.forEach(s => {
-      if (s.criteria_table === 'e_criterias' && form[s.criteria_id]) {
-        form[s.criteria_id].score = s.score
-        form[s.criteria_id].remarks = s.remarks || ''
-        form[s.criteria_id].attachmentName = s.attachment_name || ''
-        form[s.criteria_id].attachmentPath = s.attachment_path
+      if (s.criteria_table === 'e_criterias') {
+        const key = `E-${s.criteria_id}`
+        if (props.form[key]) {
+        props.form[key].score = s.score
+        props.form[key].remarks = s.remarks || ''
+        props.form[key].attachmentName = s.attachment_name || ''
+        props.form[key].attachmentPath = s.attachment_path
           ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}` // replace backslashes
           : null
-        form[s.criteria_id].attachmentType = s.attachment_type || null
+        props.form[key].attachmentType = s.attachment_type || null
       }
+    }
     })
   } catch (err) {
     console.error('Failed to fetch E criteria:', err)
@@ -226,16 +232,17 @@ onMounted(async () => {
 })
 
 function handleFileUpload(event, criteriaId) {
+  const key = `E-${criteriaId}`
   const file = event.target.files[0]
   if (file) {
-    form[criteriaId].attachment = file
-    form[criteriaId].attachmentName = file.name
+    props.form[key].attachment = file
+    props.form[key].attachmentName = file.name
 
         // Immediately set a local path to show the View button
-    form[criteriaId].attachmentPath = URL.createObjectURL(file)
+    props.form[key].attachmentPath = URL.createObjectURL(file)
 
     // Set MIME type
-    form[criteriaId].attachmentType = file.type
+    props.form[key].attachmentType = file.type
   }
 }
 
@@ -244,14 +251,15 @@ function viewFile(path) {
 }
 
 async function submitScore(criteria) {
+  const key = `E-${criteria.id}`
   const fd = new FormData()
   fd.append('nominee_id', route.params.id)
   fd.append('criteria_table', 'e_criterias')
   fd.append('criteria_id', criteria.id)
-  fd.append('score', form[criteria.id].score)
-  fd.append('remarks', form[criteria.id].remarks)
-  if (form[criteria.id].attachment) {
-    fd.append('attachment', form[criteria.id].attachment)
+  fd.append('score', props.form[key].score)
+  fd.append('remarks', props.form[key].remarks)
+  if (props.form[key].attachment) {
+    fd.append('attachment', props.form[key].attachment)
   }
 
   await $api.post('/score', fd, {

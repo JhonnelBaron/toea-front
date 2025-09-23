@@ -64,13 +64,13 @@
     <div class="relative z-10">
       <div class="flex justify-between text-xs mb-1 text-gray-600">
         <span>Completion Rate</span>
-        <span>75%</span>
+          <span>{{ completionRate }}%</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-4">
-        <div
-          class="bg-green-500 h-4 rounded-full transition-all duration-500"
-          style="width: 75%"
-        ></div>
+  <div
+    class="bg-green-500 h-4 rounded-full transition-all duration-500"
+    :style="{ width: completionRate + '%' }"
+  ></div>
       </div>
     </div>
   </div>
@@ -120,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import EvaluationCriteriaA from '~/components/BroEvaluation/EvaluationCriteriaA.vue';
 import EvaluationCriteriaB from '~/components/BroEvaluation/EvaluationCriteriaB.vue';
@@ -242,5 +242,11 @@ const confirmMarkAsDone = async () => {
     console.error('Error marking as done:', err);
   }
 };
+const completionRate = computed(() => {
+  const all = Object.values(form)
+  if (all.length === 0) return 0
 
+  const completed = all.filter(f => f.score !== null && f.score !== undefined && f.score !== '').length
+  return Math.round((completed / all.length) * 100)
+})
 </script>

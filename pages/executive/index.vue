@@ -35,7 +35,7 @@
     <div class="relative z-10">
       <div class="flex justify-between text-xs mb-1 text-gray-600">
         <span>Completion Rate</span>
-        <span>75%</span>
+        <!-- <span>75%</span> -->
       </div>
       <div class="w-full bg-gray-200 rounded-full h-4">
         <div
@@ -62,9 +62,9 @@
 
 
   <!-- Mark as Done Card (smaller) -->
-  <div class="bg-white relative overflow-hidden p-6 rounded-lg flex-[0.8] flex flex-col justify-center items-start shadow-md">
+  <!-- <div class="bg-white relative overflow-hidden p-6 rounded-lg flex-[0.8] flex flex-col justify-center items-start shadow-md"> -->
   <!-- Check background -->
-  <img 
+  <!-- <img 
     src="/images/check.png" 
     alt="Check" 
     class="absolute -right-18 -bottom-10 w-60 h-60 opacity-30 pointer-events-none select-none object-contain" 
@@ -76,7 +76,7 @@
   >
     ✅ Mark as Done
   </button>
-</div>
+</div> -->
 
 
 </div>
@@ -102,7 +102,8 @@
       <div class="mt-4">
         <div class="flex justify-between text-xs mb-1 text-gray-600">
           <span>Evaluation Progress</span>
-          <span>{{ 40 % 100 }}%</span>
+          <!-- <span>{{ 40 % 100 }}%</span> -->
+           
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
           <div
