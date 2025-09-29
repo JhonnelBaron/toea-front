@@ -35,12 +35,12 @@
     <div class="relative z-10">
       <div class="flex justify-between text-xs mb-1 text-gray-600">
         <span>Completion Rate</span>
-        <!-- <span>75%</span> -->
+    <span>{{ overallCompletionRate }}%</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-4">
         <div
           class="bg-green-500 h-4 rounded-full transition-all duration-500"
-          style="width: 75%"
+          :style="{ width: overallCompletionRate + '%' }"
         ></div>
       </div>
     </div>
@@ -93,22 +93,36 @@
       class="bg-gradient-to-br from-white to-gray-100 rounded-xl shadow-md p-5 flex flex-col justify-between"
     >
       <!-- Header -->
-      <div>
-        <p class="text-sm font-semibold text-gray-800">{{ nominee.nominee_name }}</p>
-        <p class="text-xs text-gray-500">  {{ nominee.nominee_category.charAt(0).toUpperCase() + nominee.nominee_category.slice(1) }}  Category</p>
-      </div>
+<!-- Header -->
+<div class="flex justify-between items-start">
+  <!-- Left side -->
+  <div>
+    <p class="text-sm font-semibold text-gray-800">{{ nominee.nominee_name }}</p> 
+    <p class="text-xs text-gray-500">
+      {{ nominee.nominee_category.charAt(0).toUpperCase() + nominee.nominee_category.slice(1) }} Category
+    </p>
+  </div>
+
+  <!-- Right side (scores) -->
+  <div class="text-right">
+    <p class="text-sm font-medium text-blue-700 underline">
+      {{ nominee.total_score ?? '' }}
+    </p>
+  </div>
+</div>
+
 
       <!-- Progress -->
       <div class="mt-4">
         <div class="flex justify-between text-xs mb-1 text-gray-600">
           <span>Evaluation Progress</span>
-          <!-- <span>{{ 40 % 100 }}%</span> -->
+        <span>{{ nominee.completion_rate?.toFixed(2) ?? '0.00' }}%</span>
            
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
           <div
             class="bg-green-500 h-3 rounded-full transition-all duration-500"
-            :style="{ width: (40 % 100) + '%' }"
+          :style="{ width: (nominee.completion_rate || 0) + '%' }"
           ></div>
         </div>
       </div>
@@ -187,13 +201,28 @@ const goToEvaluation = (id) => {
 }
 
 const nominees = ref([])
-
+const overallCompletionRate = ref(0) 
 // Fetch nominees on component mount
 const fetchNominees = async () => {
   try {
     const response = await $api.get('/dashboard/bro-nominees') // <-- fixed variable name
     if (response.data.status === 200) {
       nominees.value = response.data.data
+    }
+
+    const scoreRes = await $api.get('/dashboard/score-rating')
+    if (scoreRes.data.status === 200) {
+      overallCompletionRate.value = parseFloat(scoreRes.data.overall_completion_rate)
+
+      // 3. Merge scores into nominees
+      scoreRes.data.data.forEach(score => {
+        const nominee = nominees.value.find(n => n.id === score.nominee_id)
+        if (nominee) {
+          nominee.total_score = score.total_score
+          nominee.overall_score = score.overall_score
+          nominee.completion_rate = parseFloat(score.completion_rate)
+        }
+      })
     }
   } catch (error) {
     console.error('Error fetching nominees:', error)
