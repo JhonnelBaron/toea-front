@@ -57,7 +57,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3v1H6v2h3v1c0 1.657 1.343 3 3 3s3-1.343 3-3v-1h3v-2h-3v-1c0-1.657-1.343-3-3-3z" />
       </svg>
-      Evaluation Completion Percentage
+      Evaluation Completion
     </p>
 
     <!-- Progress Bar -->
@@ -73,6 +73,13 @@
   ></div>
       </div>
     </div>
+    <div class="mt-4 relative z-10">
+  <div class="flex justify-between text-sm text-gray-700">
+    <span>Total Score</span>
+    <span class="font-semibold">{{ totalScore }} / {{ maxScore }}</span>
+  </div>
+</div>
+
   </div>
 
 
@@ -107,11 +114,11 @@
 <BRONavigator :availableCategories="availableCategories" @selectCategory="activeTab = $event" />
 
 <!-- Conditionally render each EvaluationCriteria -->
-<EvaluationCriteriaA v-if="activeTab === 'A'" :isDone="isDone" :form="form"/>
-<EvaluationCriteriaB v-else-if="activeTab === 'B'" :isDone="isDone" :form="form" :nominee="nominee"/>
-<EvaluationCriteriaC v-else-if="activeTab === 'C'" :isDone="isDone" :form="form"/>
-<EvaluationCriteriaD v-else-if="activeTab === 'D'" :isDone="isDone" :form="form"/>
-<EvaluationCriteriaE v-else-if="activeTab === 'E'" :isDone="isDone" :form="form"/>
+<EvaluationCriteriaA v-if="activeTab === 'A'" :isDone="isDone" :form="form" :criterias="criterias.A" @score-updated="updateAggregates"/>
+<EvaluationCriteriaB v-else-if="activeTab === 'B'" :isDone="isDone" :form="form" :nominee="nominee" :criterias="criterias.B" @score-updated="updateAggregates"/>
+<EvaluationCriteriaC v-else-if="activeTab === 'C'" :isDone="isDone" :form="form" :criterias="criterias.C" @score-updated="updateAggregates"/>
+<EvaluationCriteriaD v-else-if="activeTab === 'D'" :isDone="isDone" :form="form" :criterias="criterias.D" @score-updated="updateAggregates"/>
+<EvaluationCriteriaE v-else-if="activeTab === 'E'" :isDone="isDone" :form="form" :criterias="criterias.E" @score-updated="updateAggregates"/>
 
 
     </div>
@@ -144,6 +151,15 @@ const availableCategories = ref({
   E: false,
 })
 
+const criterias = reactive({
+  A: [],
+  B: [],
+  C: [],
+  D: [],
+  E: []
+})
+
+
 const isDone = ref(false) // ✅ new state
 
 const fetchNominee = async () => {
@@ -162,19 +178,124 @@ const fetchNominee = async () => {
 const fetchCriterias = async () => {
   try {
     const resA = await $api.get(`/criteria/a?nominee_id=${route.params.id}`)
-    availableCategories.value.A = resA.data.data.length > 0
+    criterias.A = resA.data.data
+    availableCategories.value.A = criterias.A.length > 0
+    criterias.A.forEach(c => {
+      const key = `A-${c.id}`
+      if (!form[key]) {
+        form[key] = {           
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false 
+        }
+      }
+    })
+
 
     const resB = await $api.get(`/criteria/b?nominee_id=${route.params.id}`)
-    availableCategories.value.B = resB.data.data.length > 0
+    criterias.B = resB.data.data
+    availableCategories.value.B = criterias.B.length > 0
+    criterias.B.forEach(c => {
+      const key = `B-${c.id}`
+      if (!form[key]) {
+        form[key] = { 
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false
+         }
+      }
+    })
+
 
     const resC = await $api.get(`/criteria/c?nominee_id=${route.params.id}`)
-    availableCategories.value.C = resC.data.data.length > 0
+    criterias.C = resC.data.data
+    availableCategories.value.C = criterias.C.length > 0
+    criterias.C.forEach(c => {
+      const key =  `C-${c.id}`
+      if (!form[key]) {
+        form[key] = {
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false
+        }
+      }
+    })
 
     const resD = await $api.get(`/criteria/d?nominee_id=${route.params.id}`)
-    availableCategories.value.D = resD.data.data.length > 0
+    criterias.D = resD.data.data
+    availableCategories.value.D = criterias.D.length > 0
+    criterias.D.forEach(c => {
+      const key = `D-${c.id}`
+      if (!form[key]) {
+        form[key] = { 
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false
+         }
+      }
+    })
 
     const resE = await $api.get(`/criteria/e?nominee_id=${route.params.id}`)
-    availableCategories.value.E = resE.data.data.length > 0
+    criterias.E = resE.data.data
+    availableCategories.value.E = criterias.E.length > 0
+    criterias.E.forEach(c => {
+      const key = `E-${c.id}`
+      if (!form[key]) {
+        form[key] = { 
+          score: '',
+          remarks: '',
+          attachment: null,
+          attachmentName: '',
+          attachmentPath: null,
+          attachmentType: null,
+          showFile: false
+        }
+      }
+    })
+
+    // ✅  fetch saved scores once after initializing criterias
+    const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
+    const scores = scoresRes.data.data
+
+    scores.forEach(s => {
+      let prefix = ''
+      switch (s.criteria_table) {
+        case 'a_criterias': prefix = 'A'; break
+        case 'b_criterias': prefix = 'B'; break
+        case 'c_criterias': prefix = 'C'; break
+        case 'd_criterias': prefix = 'D'; break
+        case 'e_criterias': prefix = 'E'; break
+      }
+
+      if (!prefix) return
+      const key = `${prefix}-${s.criteria_id}`
+
+      if (form[key]) {
+        form[key].score = s.score
+        form[key].remarks = s.remarks || ''
+        form[key].attachmentName = s.attachment_name || ''
+        form[key].attachmentPath = s.attachment_path
+          ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}`
+          : null
+        form[key].attachmentType = s.attachment_type || null
+      }
+    })
 
     // auto-select first available tab
     const firstAvailable = Object.keys(availableCategories.value)
@@ -249,4 +370,56 @@ const completionRate = computed(() => {
   const completed = all.filter(f => f.score !== null && f.score !== undefined && f.score !== '').length
   return Math.round((completed / all.length) * 100)
 })
+
+const totalScore = computed(() => {
+  return Object.values(form).reduce((sum, f) => {
+    const score = parseFloat(f.score)
+    return sum + (isNaN(score) ? 0 : score)
+  }, 0)
+})
+
+const maxScore = computed(() => {
+  let total = 0
+  // loop through each category (A–E)
+  Object.values(criterias).forEach(category => {
+    category.forEach(c => {
+      if (c.a_requirements && c.a_requirements.length > 0) {
+        // take the max point_value from its requirements
+        const max = Math.max(...c.a_requirements.map(r => r.point_value))
+        total += max
+      } else if (c.b_requirements && c.b_requirements.length > 0) {
+        const max = Math.max(...c.b_requirements.map(r => r.point_value))
+        total += max
+      } else if (c.c_requirements && c.c_requirements.length > 0) {
+        const max = Math.max(...c.c_requirements.map(r => r.point_value))
+        total += max
+      } else if (c.d_requirements && c.d_requirements.length > 0) {
+        const max = Math.max(...c.d_requirements.map(r => r.point_value))
+        total += max
+      } else if (c.e_requirements && c.e_requirements.length > 0) {
+        const max = Math.max(...c.e_requirements.map(r => r.point_value))
+        total += max
+      }
+    })
+  })
+  return total
+})
+async function updateAggregates() {
+  // compute fresh values (already have completionRate, totalScore, maxScore)
+  const payload = {
+    nominee_id: route.params.id,
+    completion_rate: completionRate.value,
+    total_score: totalScore.value,
+    max_score: maxScore.value
+  }
+
+  try {
+    await $api.post('/scores/aggregate', payload)
+    console.log('Aggregates stored ✅', payload)
+  } catch (err) {
+    console.error('Error saving aggregates:', err)
+  }
+}
+
+
 </script>

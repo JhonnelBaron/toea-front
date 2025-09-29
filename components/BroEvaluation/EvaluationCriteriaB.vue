@@ -53,7 +53,7 @@
             <!-- Dropdown -->
             <div v-if="props.form[`B-${criteria.id}`]">
               <label class="text-sm font-light block mb-1">Select Score:</label>
-              <select v-model="props.form[`B-${criteria.id}`].score" @change="submitScore(criteria)"  :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
+              <select v-model="props.form[`B-${criteria.id}`].score" @change="() => { submitScore(criteria); emitUpdate() }" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
                 <option value="">Choose...</option>
                 <option v-for="requirement in criteria.b_requirements" :key="'score-'+requirement.id" :value="requirement.point_value">
                   {{ requirement.point_value }} - {{ requirement.requirement_description }}
@@ -144,6 +144,7 @@ const props = defineProps({
   isDone: Boolean,
   form: Object,
   nominee: Object,
+  criterias: Array
 });
 function openFilePopup(path, type) {
   if (!path) return
@@ -192,7 +193,7 @@ function openFilePopup(path, type) {
 const filteredCriterias = computed(() => {
   if (!props.nominee) return []
   const category = props.nominee.nominee_category
-  return bCriterias.value.filter(c => {
+  return props.criterias.filter(c => {
     if (category === 'small') return c.bro_small === 1
     if (category === 'medium') return c.bro_medium === 1
     if (category === 'large') return c.bro_large === 1
@@ -201,51 +202,57 @@ const filteredCriterias = computed(() => {
 })
 
 
-onMounted(async () => {
-  try {
-    const res = await $api.get('/criteria/b')
-    bCriterias.value = res.data.data
+// onMounted(async () => {
+//   try {
+//     const res = await $api.get('/criteria/b')
+//     bCriterias.value = res.data.data
 
-    // ✅ initialize form after criterias are loaded
-    filteredCriterias.value.forEach(c => {
-      const key = `B-${c.id}`
-      if (!props.form[key]) {
-        props.form[key] = {
-          score: '',
-          remarks: '',
-          attachment: null,
-          attachmentName: '',
-          attachmentPath: null,
-          attachmentType: null,
-          showFile: false
-        }
-      }
-    })
+//     // ✅ initialize form after criterias are loaded
+//     filteredCriterias.value.forEach(c => {
+//       const key = `B-${c.id}`
+//       if (!props.form[key]) {
+//         props.form[key] = {
+//           score: '',
+//           remarks: '',
+//           attachment: null,
+//           attachmentName: '',
+//           attachmentPath: null,
+//           attachmentType: null,
+//           showFile: false
+//         }
+//       }
+//     })
 
-     // 3. fetch saved scores for this nominee
-    const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
-    const scores = scoresRes.data.data
+//      // 3. fetch saved scores for this nominee
+//     const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
+//     const scores = scoresRes.data.data
 
-    // 4. map saved scores into form (only A criteria)
-    scores.forEach(s => {
-      if (s.criteria_table === 'b_criterias') {
-        const key = `B-${s.criteria_id}`
-        props.form[key].score = s.score
-        props.form[key].remarks = s.remarks || ''
-        props.form[key].attachmentName = s.attachment_name || ''
-        props.form[key].attachmentPath = s.attachment_path
-          ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}` // replace backslashes
-          : null
-        props.form[key].attachmentType = s.attachment_type || null
-      }
-    })
-  } catch (err) {
-    console.error('Failed to fetch B criteria:', err)
-  }
-})
+//     // 4. map saved scores into form (only A criteria)
+//     scores.forEach(s => {
+//       if (s.criteria_table === 'b_criterias') {
+//         const key = `B-${s.criteria_id}`
+//         props.form[key].score = s.score
+//         props.form[key].remarks = s.remarks || ''
+//         props.form[key].attachmentName = s.attachment_name || ''
+//         props.form[key].attachmentPath = s.attachment_path
+//           ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}` // replace backslashes
+//           : null
+//         props.form[key].attachmentType = s.attachment_type || null
+//       }
+//     })
+//   } catch (err) {
+//     console.error('Failed to fetch B criteria:', err)
+//   }
+// })
+const emit = defineEmits(['score-updated'])
+
+function emitUpdate() {
+  emit('score-updated')
+}
+
 
 function handleFileUpload(event, criteriaId) {
-  const key = `B-${s.criteriaId}`
+  const key = `B-${criteriaId}`
   const file = event.target.files[0]
   if (file) {
     props.form[key].attachment = file

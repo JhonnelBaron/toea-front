@@ -4,7 +4,7 @@
       <span class="text-md font-medium p-2">D. Reporting Efficiency</span>
 
       <!-- Loop over B criterias -->
-      <div v-for="criteria in dCriterias" :key="criteria.id" class="mb-6">
+      <div v-for="criteria in props.criterias" :key="criteria.id" class="mb-6">
 
         <!-- Header Card -->
         <div class="flex flex-row bg-blue-950 text-white p-4 rounded-t-md">
@@ -52,7 +52,7 @@
             <!-- Dropdown -->
             <div v-if="props.form[`D-${criteria.id}`]">
               <label class="text-sm font-light block mb-1">Select Score:</label>
-              <select v-model="props.form[`D-${criteria.id}`].score" @change="submitScore(criteria)" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
+              <select v-model="props.form[`D-${criteria.id}`].score" @change="() => { submitScore(criteria); emitUpdate() }" :disabled="isDone" class="w-full border rounded-md p-2 text-sm border-gray-300">
                 <option value="">Choose...</option>
                 <option v-for="requirement in criteria.d_requirements" :key="'score-'+requirement.id" :value="requirement.point_value">
                   {{ requirement.point_value }} - {{ requirement.requirement_description }}
@@ -142,7 +142,8 @@ const dCriterias = ref([])
 const route = useRoute()
 const props = defineProps({
   isDone: Boolean,
-  form: Object
+  form: Object,
+  criterias: Array
 })
 
 function openFilePopup(path, type) {
@@ -188,50 +189,55 @@ function openFilePopup(path, type) {
   popup.document.close()
 }
 
-onMounted(async () => {
-  try {
-    const res = await $api.get('/criteria/d')
-    dCriterias.value = res.data.data
+// onMounted(async () => {
+//   try {
+//     const res = await $api.get('/criteria/d')
+//     dCriterias.value = res.data.data
 
-    // ✅ initialize form after criterias are loaded
-    dCriterias.value.forEach(c => {
-      const key = `D-${c.id}`
-      if (!props.form[key]) {
-        props.form[key] = {
-          score: '',
-          remarks: '',
-          attachment: null,
-          attachmentName: '',
-          attachmentPath: null,
-          attachmentType: null,
-          showFile: false
-        }
-      }
-    })
+//     // ✅ initialize form after criterias are loaded
+//     dCriterias.value.forEach(c => {
+//       const key = `D-${c.id}`
+//       if (!props.form[key]) {
+//         props.form[key] = {
+//           score: '',
+//           remarks: '',
+//           attachment: null,
+//           attachmentName: '',
+//           attachmentPath: null,
+//           attachmentType: null,
+//           showFile: false
+//         }
+//       }
+//     })
 
-     // 3. fetch saved scores for this nominee
-    const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
-    const scores = scoresRes.data.data
+//      // 3. fetch saved scores for this nominee
+//     const scoresRes = await $api.get(`/scores/nominee/${route.params.id}`)
+//     const scores = scoresRes.data.data
 
-    // 4. map saved scores into form (only A criteria)
-    scores.forEach(s => {
-      if (s.criteria_table === 'd_criterias') {
-        const key = `D-${s.criteria_id}`
-        if (props.form[key]) {
-          props.form[key].score = s.score
-          props.form[key].remarks = s.remarks || ''
-          props.form[key].attachmentName = s.attachment_name || ''
-          props.form[key].attachmentPath = s.attachment_path
-            ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}`
-            : null
-          props.form[key].attachmentType = s.attachment_type || null
-        }
-      }
-    })
-  } catch (err) {
-    console.error('Failed to fetch D criteria:', err)
-  }
-})
+//     // 4. map saved scores into form (only A criteria)
+//     scores.forEach(s => {
+//       if (s.criteria_table === 'd_criterias') {
+//         const key = `D-${s.criteria_id}`
+//         if (props.form[key]) {
+//           props.form[key].score = s.score
+//           props.form[key].remarks = s.remarks || ''
+//           props.form[key].attachmentName = s.attachment_name || ''
+//           props.form[key].attachmentPath = s.attachment_path
+//             ? `${BASE_URL}/${s.attachment_path.replace(/\\/g, '/')}`
+//             : null
+//           props.form[key].attachmentType = s.attachment_type || null
+//         }
+//       }
+//     })
+//   } catch (err) {
+//     console.error('Failed to fetch D criteria:', err)
+//   }
+// })
+const emit = defineEmits(['score-updated'])
+
+function emitUpdate() {
+  emit('score-updated')
+}
 
 function handleFileUpload(event, criteriaId) {
   const key = `D-${criteriaId}`
