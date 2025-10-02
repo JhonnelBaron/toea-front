@@ -2,12 +2,12 @@
   <div class="flex h-screen overflow-hidden">
     <SidebarAdmin />
 
-    <div class="flex-1 bg-blue-200 flex flex-col">
+    <div class="flex-1 bg-blue-200 flex flex-col overflow-y-auto">
       <div class="flex flex-row items-stretch mt-4 mr-4 gap-4 rounded-lg">
-
+        
         <div class="bg-white p-4 rounded-lg w-1/5 min-w-[150px] h-full flex flex-col justify-between border-b-4 border-red-500">
           <p class="text-sm font-medium">Total number of Nominees</p>
-          <div class="font-light text-5xl text-center">143</div>
+          <div class="font-light text-5xl text-center">{{totalNominees}}</div>
         </div>
 
         <div class="bg-white p-4 rounded-lg flex-1 h-full flex flex-col justify-start border-b-4 border-green-800">
@@ -29,47 +29,256 @@
 
       </div>
 
-      <section class="flex-1 bg-white flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto border-b-4 border-blue-600">
-        <div class="p-10 text-4xl"></div>
-      </section>
+
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 mr-4 ml-0">
+  <!-- Best Regional Office -->
+<div class="flex flex-col gap-y-4">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
+    <!-- Building Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M3 21h18M9 8h6m-7 4h8m-9 4h10M12 3l8 4v2H4V7l8-4z" />
+    </svg>
+    <div>
+      <h2 class="text-lg font-semibold">Best Regional Office</h2>
+      <p class="text-3xl font-bold">{{ broCount }}</p>
+    </div>
+  </div>
+
+  <!-- Subcards -->
+  <div class="grid grid-cols-3 gap-3">
+    <div class="bg-blue-50 rounded-lg p-3 text-center">
+      <p class="text-xs text-gray-600">Small</p>
+      <p class="text-xl font-bold text-blue-600">{{ broSmall }}</p>
+    </div>
+    <div class="bg-blue-50 rounded-lg p-3 text-center">
+      <p class="text-xs text-gray-600">Medium</p>
+      <p class="text-xl font-bold text-blue-600">{{ broMedium }}</p>
+    </div>
+    <div class="bg-blue-50 rounded-lg p-3 text-center">
+      <p class="text-xs text-gray-600">Large</p>
+      <p class="text-xl font-bold text-blue-600">{{ broLarge }}</p>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Galing Probinsya -->
+  <div class="flex flex-col gap-y-4">
+    <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
+      <!-- Semi-building Icon (house style) -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 12l9-9 9 9M4 10v10h16V10" />
+      </svg>
+      <div>
+        <h2 class="text-lg font-semibold">Galing Probinsya</h2>
+        <p class="text-3xl font-bold">{{ gpCount }}</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-green-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">Small</p>
+        <p class="text-xl font-bold text-green-600">{{ gpSmall }}</p>
+      </div>
+      <div class="bg-green-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">Medium</p>
+        <p class="text-xl font-bold text-green-600">{{ gpMedium }}</p>
+      </div>
+      <div class="bg-green-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">Large</p>
+        <p class="text-xl font-bold text-green-600">{{ gpLarge }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Best Training Institution -->
+  <div class="flex flex-col gap-y-4">
+    <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
+      <!-- Training Icon (graduation cap) -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m-3 0h6" />
+      </svg>
+      <div>
+        <h2 class="text-lg font-semibold">Best Training Institution</h2>
+        <p class="text-3xl font-bold">{{ btiCount }}</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-orange-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">RTC/STC</p>
+        <p class="text-xl font-bold text-orange-600">{{ btiRtc }}</p>
+      </div>
+      <div class="bg-orange-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">PTC/DTC</p>
+        <p class="text-xl font-bold text-orange-600">{{ btiPtc }}</p>
+      </div>
+      <div class="bg-orange-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-gray-600">TAS</p>
+        <p class="text-xl font-bold text-orange-600">{{ btiTas }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="flex-1 bg-white flex flex-col mt-4 mb-4 mr-4 rounded-2xl shadow-lg overflow-y-auto border-b-4 border-blue-600 p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Executive Offices -->
+    <div class="flex flex-col">
+      <h2 class="text-lg font-semibold mb-4 text-blue-700">Evaluators</h2>
+      <ul class="space-y-3">
+       <!-- Executive Offices -->
+    <li
+      @click="fetchUsersByType('executive office focal', 'Executive Offices')"
+      class="flex justify-between items-center bg-blue-50 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition"
+    >
+      <span class="text-sm font-medium text-gray-700">Executive Offices</span>
+      <span class="text-lg font-bold text-blue-600">{{ executiveOfficeCount }}</span>
+    </li>
+
+    <!-- Secretariat -->
+    <li
+      @click="fetchUsersByType('secretariat', 'Secretariat')"
+      class="flex justify-between items-center bg-blue-50 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition"
+    >
+      <span class="text-sm font-medium text-gray-700">Secretariat</span>
+      <span class="text-lg font-bold text-blue-600">{{ secretariatCount }}</span>
+    </li>
+
+    <!-- External Validators -->
+    <li
+      @click="fetchUsersByType('external validator', 'External Validators')"
+      class="flex justify-between items-center bg-blue-50 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition"
+    >
+      <span class="text-sm font-medium text-gray-700">External Validators</span>
+      <span class="text-lg font-bold text-blue-600">{{ externalValidatorCount }}</span>
+    </li>
+      </ul>
+    </div>
+
+    <!-- View Monitoring -->
+    <div class="bg-gradient-to-r text-center from-blue-400 to-blue-600 text-white rounded-xl p-6 flex flex-col justify-between shadow">
+      <div>
+        <h2 class="text-xl font-semibold">Monitoring Dashboard</h2>
+        <p class="text-sm opacity-90 mt-2">Track progress and evaluations in real-time.</p>
+      </div>
+      <div class="mt-6">
+        <p class="text-2xl font-bold">{{totalNominees}}</p>
+        <p class="text-xs opacity-90">Total Nominees Monitored</p>
+      </div>
+      <button class="mt-6 bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow hover:bg-gray-100 transition">
+        View Monitoring
+      </button>
     </div>
 
   </div>
+</section>
+
+
+    </div>
+
+  </div>
+  <UserModal
+  v-if="showUserModal"
+  :title="modalTitle"
+  :users="modalUsers"
+  @close="showUserModal = false"
+/>
+
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'; // Import ref, onMounted, and onUnmounted
 import SidebarAdmin from '~/components/SidebarAdmin.vue';
-import CriteriaNavigator from '~/components/CriteriaNavigator.vue';
-
-// Import Criteria components (existing code)
-import CriteriaA from '~/components/Criterias/CriteriaA.vue';
-import CriteriaB from '~/components/Criterias/CriteriaB.vue';
-import CriteriaC from '~/components/Criterias/CriteriaC.vue';
-import CriteriaD from '~/components/Criterias/CriteriaD.vue';
-import CriteriaE from '~/components/Criterias/CriteriaE.vue';
+import UserModal from '~/components/Modals/UserModal.vue'
+const { $api } = useNuxtApp()
 
 definePageMeta({
   requiresAuth: true
 });
+const showUserModal = ref(false)
+const modalTitle = ref('')
+const modalUsers = ref([])
 
-const activeTab = ref('A');
-
-const getComponent = (tabName) => {
-  switch (tabName) {
-    case 'A': return CriteriaA;
-    case 'B': return CriteriaB;
-    case 'C': return CriteriaC;
-    case 'D': return CriteriaD;
-    case 'E': return CriteriaE;
-    default: return CriteriaA;
-  }
-};
 
 // --- Real-time clock logic ---
 const currentTime = ref('');
 const currentDate = ref('');
 let timerInterval; // To store the interval ID for cleanup
+
+// Nominee data refs
+const totalNominees = ref(0)
+
+// BRO
+const broCount = ref(0)
+const broSmall = ref(0)
+const broMedium = ref(0)
+const broLarge = ref(0)
+
+// GP
+const gpCount = ref(0)
+const gpSmall = ref(0)
+const gpMedium = ref(0)
+const gpLarge = ref(0)
+
+// BTI
+const btiCount = ref(0)
+const btiRtc = ref(0)
+const btiPtc = ref(0)
+const btiTas = ref(0)
+
+// Evaluators
+const executiveOfficeCount = ref(0)
+const secretariatCount = ref(0)
+const externalValidatorCount = ref(0)
+
+const fetchUsersByType = async (type, title) => {
+  try {
+    const res = await $api.get(`/dashboard/users?type=${encodeURIComponent(type)}`)
+    modalUsers.value = res.data.data
+    modalTitle.value = title
+    showUserModal.value = true
+  } catch (err) {
+    console.error('Error fetching users:', err)
+  }
+}
+const fetchDashboardData = async () => {
+  try {
+    const res = await $api.get('/dashboard/nominees') 
+    const data = res.data  // 👈 fix: extract response data
+
+    totalNominees.value = data.total_nominees
+
+    // BRO
+    broCount.value = data.bro.count
+    broSmall.value = data.bro.categories.small ?? 0
+    broMedium.value = data.bro.categories.medium ?? 0
+    broLarge.value = data.bro.categories.large ?? 0
+
+    // GP
+    gpCount.value = data.gp.count
+    gpSmall.value = data.gp.categories.small ?? 0
+    gpMedium.value = data.gp.categories.medium ?? 0
+    gpLarge.value = data.gp.categories.large ?? 0
+
+    // BTI
+    btiCount.value = data.bti.count
+    btiRtc.value = data.bti.categories['rtc-stc'] ?? 0
+    btiPtc.value = data.bti.categories['ptc-dtc'] ?? 0
+    btiTas.value = data.bti.categories['tas'] ?? 0
+
+    // Evaluators
+    executiveOfficeCount.value = data.users_by_type['executive office focal'] ?? 0
+    secretariatCount.value = data.users_by_type['secretariat'] ?? 0
+    externalValidatorCount.value = data.users_by_type['external validator'] ?? 0
+
+  } catch (err) {
+    console.error('Error fetching dashboard data:', err)
+  }
+}
+
 
 const updateTimeAndDate = () => {
   const now = new Date();
@@ -87,6 +296,7 @@ const updateTimeAndDate = () => {
 
 // Start the timer when the component is mounted
 onMounted(() => {
+    fetchDashboardData()
   updateTimeAndDate(); // Initial update
   timerInterval = setInterval(updateTimeAndDate, 1000); // Update every second
 });
@@ -95,4 +305,5 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(timerInterval);
 });
+
 </script>
