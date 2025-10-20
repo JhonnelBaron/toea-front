@@ -34,7 +34,7 @@
   <!-- Best Regional Office -->
 <div class="flex flex-col gap-y-4">
   <!-- Header -->
-  <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
+  <div class="relative bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
     <!-- Building Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -44,6 +44,12 @@
       <h2 class="text-lg font-semibold">Best Regional Office</h2>
       <p class="text-3xl font-bold">{{ broCount }}</p>
     </div>
+  <NuxtLink
+    to="/admin/regions"
+    class="absolute bottom-2 right-3 text-sm font-medium text-white/90 hover:text-white transition"
+  >
+    View
+  </NuxtLink>
   </div>
 
   <!-- Subcards -->

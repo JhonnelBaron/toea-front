@@ -19,6 +19,7 @@
           v-for="user in users" 
           :key="user.id" 
           class="p-4 bg-white rounded-lg shadow hover:shadow-lg transition"
+          @click="goToUserDashboard(user.id)"
         >
           <p class="text-sm font-semibold text-gray-800">
             {{ user.first_name }} {{ user.last_name }}
@@ -41,6 +42,13 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const goToUserDashboard = (id) => {
+  router.push(`/admin/${id}`)
+}
+
 defineProps({
   title: String,
   users: {
