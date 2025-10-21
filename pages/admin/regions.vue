@@ -6,7 +6,7 @@
   <!-- Best Regional Office -->
 <div class="flex flex-col gap-y-4">
   <!-- Header -->
-  <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3">
+  <div class="bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg p-4 flex items-center gap-3" @click="filterBro('all')">
     <!-- Building Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -20,15 +20,15 @@
 
   <!-- Subcards -->
   <div class="grid grid-cols-3 gap-3">
-    <div class="bg-blue-50 rounded-lg p-3 text-center">
+    <div class="bg-blue-50 rounded-lg p-3 text-center" @click="filterBro('small')">
       <p class="text-xs text-gray-600">Small</p>
       <p class="text-xl font-bold text-blue-600">{{ broSmall }}</p>
     </div>
-    <div class="bg-blue-50 rounded-lg p-3 text-center">
+    <div class="bg-blue-50 rounded-lg p-3 text-center" @click="filterBro('medium')">
       <p class="text-xs text-gray-600">Medium</p>
       <p class="text-xl font-bold text-blue-600">{{ broMedium }}</p>
     </div>
-    <div class="bg-blue-50 rounded-lg p-3 text-center">
+    <div class="bg-blue-50 rounded-lg p-3 text-center" @click="filterBro('large')">
       <p class="text-xs text-gray-600">Large</p>
       <p class="text-xl font-bold text-blue-600">{{ broLarge }}</p>
     </div>
@@ -124,10 +124,55 @@
           <td class="px-3 py-1.5">{{ item.category }}</td>
 
           <!-- Scores with superscript % -->
-          <td class="px-2 py-1.5 text-center">
-            {{ item.secretariat }}
-            <sup class="text-[10px] text-gray-500">({{ item.secretariatPercent }}%)</sup>
+          <td class="px-2 py-1.5 text-center relative">
+            <div class="flex justify-center items-center gap-1">
+              <button
+            class="text-blue-500 hover:text-blue-700 focus:outline-none"
+            @click="(e) => toggleTooltip(index, e)"
+          >
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+                </svg>
+              </button>
+              <NuxtLink
+                :to="`/admin/bro/${item.nominee_id}`"
+                class="text-blue-600 font-semibold hover:text-blue-800 hover:underline transition-colors"
+              >
+                {{ item.secretariat }}
+              </NuxtLink>
+              <sup class="text-[10px] text-gray-500">({{ item.secretariatPercent }}%)</sup>
+
+              <!-- Clickable Info Icon -->
+
+            </div>
+
+            <!-- Tooltip (click-based) -->
+          <div
+            v-if="activeTooltip === index"
+            class="fixed w-48 bg-gray-800 text-white text-xs rounded-md p-2 shadow-lg z-[9999] text-left transition-opacity duration-200"
+            :style="tooltipStyle"
+          >
+            <button
+              class="absolute top-1 right-1 text-gray-400 hover:text-white text-[10px] font-bold"
+              @click.stop="activeTooltip = null"
+            >
+              X
+            </button>
+            <div
+              class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800"
+            ></div>
+              <p>Category A: {{ item.details?.bro_a ?? 0 }}</p>
+              <p>Category B: {{ item.details?.bro_b ?? 0 }}</p>
+              <p>Category C: {{ item.details?.bro_c ?? 0 }}</p>
+              <p>Category D: {{ item.details?.bro_d ?? 0 }}</p>
+              <p>Category E: {{ item.details?.bro_e ?? 0 }}</p>
+            </div>
+            
           </td>
+
           <td class="px-2 py-1.5 text-center">
             {{ item.validator1 }}
             <sup class="text-[10px] text-gray-500">({{ item.validator1Percent }}%)</sup>
@@ -181,50 +226,7 @@ const btiCount = ref(0)
 const btiRtc = ref(0)
 const btiPtc = ref(0)
 const btiTas = ref(0)
-const tableData = ref([
-  {
-    region: 'Region I',
-    category: 'Small',
-    secretariat: 90,
-    validator1: 88,
-    validator2: 85,
-    validator3: 89,
-    average: 88,
-    secretariatPercent: 98,
-    validator1Percent: 95,
-    validator2Percent: 92,
-    validator3Percent: 93,
-    averagePercent: 95,
-  },
-  {
-    region: 'Region II',
-    category: 'Medium',
-    secretariat: 92,
-    validator1: 91,
-    validator2: 90,
-    validator3: 93,
-    average: 91.5,
-    secretariatPercent: 97,
-    validator1Percent: 93,
-    validator2Percent: 91,
-    validator3Percent: 94,
-    averagePercent: 94,
-  },
-  {
-    region: 'Region III',
-    category: 'Large',
-    secretariat: 87,
-    validator1: 84,
-    validator2: 86,
-    validator3: 88,
-    average: 86.25,
-    secretariatPercent: 89,
-    validator1Percent: 86,
-    validator2Percent: 84,
-    validator3Percent: 88,
-    averagePercent: 87,
-  },
-])
+const tableData = ref([]);
 
 const fetchDashboardData = async () => {
   try {
@@ -256,9 +258,135 @@ const fetchDashboardData = async () => {
   }
 }
 
+const fetchBroSummaries = async () => {
+  try {
+    const res = await $api.get('/bro-summaries', {
+      params: {
+        nominee_type: 'BRO', // optional — adjust if you want to filter here
+      },
+    });
+
+    // API returns { status, message, data }
+    const summaries = res.data.data || [];
+
+    // Map API data to table format
+    tableData.value = summaries.map(item => ({
+      nominee_id: item.nominee_id, 
+      region: item.nominee?.nominee_name || '—',
+      category: item.nominee?.nominee_category || '—',
+      secretariat: item.bro_total ?? 0,
+      validator1: item.ex1_total ?? 0,
+      validator2: item.ex2_total ?? 0,
+      validator3: item.ex3_total ?? 0,
+      average: computeAverage(item),
+      // secretariatPercent: computePercent(item.bro_total),
+      // validator1Percent: computePercent(item.ex1_total),
+      // validator2Percent: computePercent(item.ex2_total),
+      // validator3Percent: computePercent(item.ex3_total),
+      // averagePercent: computePercent(computeAverage(item)),
+
+            details: {
+        bro_a: item.bro_a ?? 0,
+        bro_b: item.bro_b ?? 0,
+        bro_c: item.bro_c ?? 0,
+        bro_d: item.bro_d ?? 0,
+        bro_e: item.bro_e ?? 0,
+      },
+    }));
+
+  } catch (error) {
+    console.error('Error fetching BRO summaries:', error);
+  }
+};
+// Compute average of 4 scores (if null, skip)
+const computeAverage = (item) => {
+  const scores = [item.bro_total, item.ex1_total, item.ex2_total, item.ex3_total]
+    .filter(s => s !== null && s !== undefined);
+  if (scores.length === 0) return 0;
+  return (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
+};
+
+// For now, simple placeholder percent logic — adjust if you have max scores
+// const computePercent = (score) => {
+//   if (!score) return 0;
+//   return Math.min(((score / 1000) * 100).toFixed(1), 100); // e.g., scale to %
+// };
+
+const filterBro = async (category) => {
+  try {
+    const params = { nominee_type: 'BRO' };
+
+    // Add category filter if not "all"
+    if (category !== 'all') {
+      params.nominee_category = category;
+    }
+
+    const res = await $api.get('/bro-summaries', { params });
+
+    const summaries = res.data.data || [];
+    tableData.value = summaries.map(item => ({
+      nominee_id: item.nominee_id, 
+      region: item.nominee?.nominee_name || '—',
+      category: item.nominee?.nominee_category || '—',
+      secretariat: item.bro_total ?? 0,
+      validator1: item.ex1_total ?? 0,
+      validator2: item.ex2_total ?? 0,
+      validator3: item.ex3_total ?? 0,
+      average: computeAverage(item),
+
+            details: {
+        bro_a: item.bro_a ?? 0,
+        bro_b: item.bro_b ?? 0,
+        bro_c: item.bro_c ?? 0,
+        bro_d: item.bro_d ?? 0,
+        bro_e: item.bro_e ?? 0,
+      },
+    }));
+
+    console.log(`Filtered ${category}:`, summaries);
+  } catch (error) {
+    console.error('Error filtering BRO summaries:', error);
+  }
+};
+const activeTooltip = ref(null)
+
+const tooltipStyle = ref({ top: '0px', left: '0px' })
+
+function toggleTooltip(index, event) {
+  if (activeTooltip.value === index) {
+    activeTooltip.value = null
+    return
+  }
+
+  // Get the position of the clicked button
+  const rect = event.currentTarget.getBoundingClientRect()
+
+  // Calculate tooltip position (above the clicked icon)
+  tooltipStyle.value = {
+    top: `${rect.top - 90}px`, // adjust height offset
+    left: `${rect.left + rect.width / 2 - 96}px`, // center horizontally
+  }
+
+  activeTooltip.value = index
+}
+
+
+
+function handleClickOutside(event) {
+  if (!event.target.closest('td')) {
+    activeTooltip.value = null
+  }
+}
+
 onMounted(() => {
-    fetchDashboardData()
-});
+  fetchDashboardData()
+  fetchBroSummaries()
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 
 </script>

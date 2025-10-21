@@ -96,7 +96,7 @@
   Done Evaluating?
 </p>
 <button
-  :disabled="isDone"
+  disabled
   @click="confirmMarkAsDone"
   class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 
          text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300 ease-in-out
