@@ -138,7 +138,23 @@
                 </svg>
               </button>
               <NuxtLink
-                :to="`/admin/bro/${item.nominee_id}`"
+                  :to="{
+                    path: `/admin/bro/${item.nominee_id}`,
+                    query: {
+                      total: item.secretariat,
+                      a: item.details?.bro_a,
+                      b: item.details?.bro_b,
+                      c: item.details?.bro_c,
+                      d: item.details?.bro_d,
+                      e: item.details?.bro_e,
+                      a_percentage: item.details?.a_percentage,
+                      b_percentage: item.details?.b_percentage,
+                      c_percentage: item.details?.c_percentage,
+                      d_percentage: item.details?.d_percentage,
+                      e_percentage: item.details?.e_percentage,
+                      total_percentage: item.secretariatPercent
+                    }
+                  }"
                 class="text-blue-600 font-semibold hover:text-blue-800 hover:underline transition-colors"
               >
                 {{ item.secretariat }}
@@ -164,11 +180,11 @@
             <div
               class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800"
             ></div>
-              <p>Category A: {{ item.details?.bro_a ?? 0 }}</p>
-              <p>Category B: {{ item.details?.bro_b ?? 0 }}</p>
-              <p>Category C: {{ item.details?.bro_c ?? 0 }}</p>
-              <p>Category D: {{ item.details?.bro_d ?? 0 }}</p>
-              <p>Category E: {{ item.details?.bro_e ?? 0 }}</p>
+            <p>Category A: {{ item.details?.bro_a ?? 0 }} pts — <span class="text-blue-300">{{ item.details?.a_percentage ?? 0 }}%</span></p>
+            <p>Category B: {{ item.details?.bro_b ?? 0 }} pts — <span class="text-blue-300">{{ item.details?.b_percentage ?? 0 }}%</span></p>
+            <p>Category C: {{ item.details?.bro_c ?? 0 }} pts — <span class="text-blue-300">{{ item.details?.c_percentage ?? 0 }}%</span></p>
+            <p>Category D: {{ item.details?.bro_d ?? 0 }} pts — <span class="text-blue-300">{{ item.details?.d_percentage ?? 0 }}%</span></p>
+            <p>Category E: {{ item.details?.bro_e ?? 0 }} pts — <span class="text-blue-300">{{ item.details?.e_percentage ?? 0 }}%</span></p>
             </div>
             
           </td>
@@ -279,11 +295,11 @@ const fetchBroSummaries = async () => {
       validator2: item.ex2_total ?? 0,
       validator3: item.ex3_total ?? 0,
       average: computeAverage(item),
-      // secretariatPercent: computePercent(item.bro_total),
-      // validator1Percent: computePercent(item.ex1_total),
-      // validator2Percent: computePercent(item.ex2_total),
-      // validator3Percent: computePercent(item.ex3_total),
-      // averagePercent: computePercent(computeAverage(item)),
+      secretariatPercent: item.total_percentage ? item.total_percentage.toFixed(1) : 0,
+      validator1Percent: 0, // placeholder if you don’t have these yet
+      validator2Percent: 0,
+      validator3Percent: 0,
+      averagePercent: 0,
 
             details: {
         bro_a: item.bro_a ?? 0,
@@ -291,6 +307,12 @@ const fetchBroSummaries = async () => {
         bro_c: item.bro_c ?? 0,
         bro_d: item.bro_d ?? 0,
         bro_e: item.bro_e ?? 0,
+
+        a_percentage: item.A_percentage?.toFixed(1) ?? 0,
+        b_percentage: item.B_percentage?.toFixed(1) ?? 0,
+        c_percentage: item.C_percentage?.toFixed(1) ?? 0,
+        d_percentage: item.D_percentage?.toFixed(1) ?? 0,
+        e_percentage: item.E_percentage?.toFixed(1) ?? 0,
       },
     }));
 
@@ -333,6 +355,11 @@ const filterBro = async (category) => {
       validator2: item.ex2_total ?? 0,
       validator3: item.ex3_total ?? 0,
       average: computeAverage(item),
+      secretariatPercent: item.total_percentage ? item.total_percentage.toFixed(1) : 0,
+      validator1Percent: 0, // placeholder if you don’t have these yet
+      validator2Percent: 0,
+      validator3Percent: 0,
+      averagePercent: 0,
 
             details: {
         bro_a: item.bro_a ?? 0,
@@ -340,7 +367,14 @@ const filterBro = async (category) => {
         bro_c: item.bro_c ?? 0,
         bro_d: item.bro_d ?? 0,
         bro_e: item.bro_e ?? 0,
+        a_percentage: item.A_percentage?.toFixed(1) ?? 0,
+        b_percentage: item.B_percentage?.toFixed(1) ?? 0,
+        c_percentage: item.C_percentage?.toFixed(1) ?? 0,
+        d_percentage: item.D_percentage?.toFixed(1) ?? 0,
+        e_percentage: item.E_percentage?.toFixed(1) ?? 0,
       },
+
+
     }));
 
     console.log(`Filtered ${category}:`, summaries);

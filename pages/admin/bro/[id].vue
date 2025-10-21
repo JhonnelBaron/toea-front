@@ -64,19 +64,19 @@
     <div class="relative z-10">
       <div class="flex justify-between text-xs mb-1 text-gray-600">
         <span>Completion Rate</span>
-          <span>{{ completionRate }}%</span>
+          <span>{{ percentages.total }}%</span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-4">
   <div
     class="bg-green-500 h-4 rounded-full transition-all duration-500"
-    :style="{ width: completionRate + '%' }"
+    :style="{ width: percentages.total + '%' }"
   ></div>
       </div>
     </div>
     <div class="mt-4 relative z-10">
   <div class="flex justify-between text-sm text-gray-700">
     <span>Total Score</span>
-    <span class="font-semibold">{{ totalScore }} / 1000</span>
+    <span class="font-semibold">{{ totalScor }} / 1000</span>
   </div>
 </div>
 
@@ -84,29 +84,32 @@
 
 
   <!-- Mark as Done Card (smaller) -->
-  <div class="bg-white relative overflow-hidden p-6 rounded-lg flex-[0.8] flex flex-col justify-center items-start shadow-md">
-  <!-- Check background -->
-  <img 
-    src="/images/check.png" 
-    alt="Check" 
-    class="absolute -right-18 -bottom-10 w-60 h-60 opacity-30 pointer-events-none select-none object-contain" 
-  />
+<!-- Category Breakdown Card -->
+<div class="bg-white p-6 rounded-2xl shadow-md">
+  <h2 class="text-lg font-semibold text-gray-700">Category Breakdown</h2>
 
-<p v-if="!isDone" class="text-lg font-light mb-2 relative z-10">
-  Done Evaluating?
-</p>
-<button
-  disabled
-  @click="confirmMarkAsDone"
-  class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 
-         text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300 ease-in-out
-         relative z-10 disabled:opacity-50 disabled:cursor-not-allowed
-         w-full text-center"
->
-  ✅ {{ isDone ? 'Submitted' : 'Mark as Done' }}
-</button>
+  <div class="flex justify-between text-center">
+    <div
+      v-for="(cat, key) in categories"
+      :key="key"
+      class="flex flex-col items-center flex-1 px-3 py-2 rounded-lg hover:bg-blue-50 transition"
+    >
+      <!-- Category Letter -->
+      <span class="text-xl font-bold text-blue-700 mb-1">{{ key }}</span>
 
+      <!-- Separator -->
+      <div class="w-8 h-0.5 bg-gray-300 mb-1"></div>
+
+      <!-- Score -->
+      <span class="text-sm font-semibold text-gray-800">{{ cat.score }}</span>
+
+      <!-- Percentage -->
+      <span class="text-xs text-gray-500">{{ cat.percent }}%</span>
+    </div>
+  </div>
 </div>
+
+
 
 
 </div>
@@ -160,7 +163,23 @@ const criterias = reactive({
   D: [],
   E: []
 })
-
+const nomineeId = route.params.id
+const totalScor = route.query.total
+const scores = {
+  A: route.query.a,
+  B: route.query.b,
+  C: route.query.c,
+  D: route.query.d,
+  E: route.query.e
+}
+const percentages = {
+  A: route.query.a_percentage,
+  B: route.query.b_percentage,
+  C: route.query.c_percentage,
+  D: route.query.d_percentage,
+  E: route.query.e_percentage,
+  total: route.query.total_percentage
+}
 
 const isDone = ref(false) // ✅ new state
 
@@ -366,5 +385,11 @@ async function updateAggregates() {
   }
 }
 
-
+const categories = {
+  A: { score: route.query.a ?? 0, percent: route.query.a_percentage ?? 0 },
+  B: { score: route.query.b ?? 0, percent: route.query.b_percentage ?? 0 },
+  C: { score: route.query.c ?? 0, percent: route.query.c_percentage ?? 0 },
+  D: { score: route.query.d ?? 0, percent: route.query.d_percentage ?? 0 },
+  E: { score: route.query.e ?? 0, percent: route.query.e_percentage ?? 0 },
+}
 </script>
