@@ -276,9 +276,9 @@ const fetchDashboardData = async () => {
     btiTas.value = data.bti.categories['tas'] ?? 0
 
     // Evaluators
-    executiveOfficeCount.value = data.users_by_type['executive office focal'] ?? 0
-    secretariatCount.value = data.users_by_type['secretariat'] ?? 0
-    externalValidatorCount.value = data.users_by_type['external validator'] ?? 0
+    executiveOfficeCount.value = data.users_by_type.data['executive office focal'] ?? 0
+    secretariatCount.value = data.users_by_type.data['secretariat'] ?? 0
+    externalValidatorCount.value = data.users_by_type.data['external validator'] ?? 0
 
   } catch (err) {
     console.error('Error fetching dashboard data:', err)
