@@ -202,10 +202,53 @@
             <sup class="text-[10px] text-gray-500">({{ item.validator3Percent }}%)</sup>
           </td>
 
-          <td class="px-2 py-1.5 text-center font-semibold text-blue-600 bg-blue-50 rounded-r-lg">
+          <!-- <td class="px-2 py-1.5 text-center font-semibold text-blue-600 bg-blue-50 rounded-r-lg">
             {{ item.average }}
             <sup class="text-[10px] text-gray-500">({{ item.averagePercent }}%)</sup>
-          </td>
+          </td> -->
+          <td class="px-2 py-1.5 text-center font-semibold text-blue-600 bg-blue-50 rounded-r-lg flex items-center justify-center gap-2">
+          <span>
+            {{ item.average }}
+            <sup class="text-[10px] text-gray-500">({{ item.averagePercent }}%)</sup>
+          </span>
+
+          <!-- Endorse toggle icon -->
+          <button
+            @click="toggleEndorse(item)"
+            class="text-gray-400 hover:text-blue-600 transition-colors"
+            :title="item.endorse_externals ? 'Unendorse' : 'Endorse'"
+          >
+            <svg
+              v-if="item.endorse_externals"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 text-green-500"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.172l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </button>
+        </td>
+
         </tr>
       </tbody>
     </table>
@@ -348,6 +391,7 @@ const filterBro = async (category) => {
     const summaries = res.data.data || [];
     tableData.value = summaries.map(item => ({
       nominee_id: item.nominee_id, 
+      endorse_externals: item.endorse_externals ?? false,
       region: item.nominee?.nominee_name || '—',
       category: item.nominee?.nominee_category || '—',
       secretariat: item.bro_total ?? 0,
@@ -421,6 +465,34 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+const toggleEndorse = async (item) => {
+  // Customize the confirmation message depending on current status
+  const message = item.endorse_externals
+    ? 'Are you sure you want to remove this nominee’s endorsement to external validators?'
+    : 'Are you sure you want to endorse this nominee to external validators?';
+
+  // Show confirmation dialog
+  const confirmed = confirm(message);
+  if (!confirmed) return; // stop if user clicked Cancel
+
+  try {
+    const res = await $api.post(`/bro-summaries/endorse/${item.nominee_id}`);
+
+    if (res.data.status === 200) {
+      // Flip the local boolean so UI updates immediately
+      item.endorse_externals = !item.endorse_externals;
+
+      // Optional toast or alert
+      alert(res.data.message);
+    } else {
+      console.error('Error:', res.data.message);
+      alert('Something went wrong while updating endorsement.');
+    }
+  } catch (error) {
+    console.error('Error endorsing nominee:', error);
+    alert('Failed to update endorsement. Please try again.');
+  }
+};
 
 
 </script>
