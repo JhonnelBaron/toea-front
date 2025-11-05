@@ -166,17 +166,27 @@
 
     <!-- View Monitoring -->
     <div class="bg-gradient-to-r text-center from-blue-400 to-blue-600 text-white rounded-xl p-6 flex flex-col justify-between shadow">
-      <div>
-        <h2 class="text-xl font-semibold">Monitoring Dashboard</h2>
-        <p class="text-sm opacity-90 mt-2">Track progress and evaluations in real-time.</p>
-      </div>
+      <div class="grid grid-cols-3 gap-3 mt-6">
+    <div class="bg-white/20 rounded-lg p-3 text-center shadow hover:bg-white/30 transition">
+      <p class="text-lg font-bold">{{ broFinalistCount }}</p>
+      <p class="text-xs opacity-90">BRO</p>
+    </div>
+    <div class="bg-white/20 rounded-lg p-3 text-center shadow hover:bg-white/30 transition">
+      <p class="text-lg font-bold">{{ gpFinalistCount}}</p>
+      <p class="text-xs opacity-90">GP</p>
+    </div>
+    <div class="bg-white/20 rounded-lg p-3 text-center shadow hover:bg-white/30 transition">
+      <p class="text-lg font-bold">{{ btiFinalistCount }}</p>
+      <p class="text-xs opacity-90">BTI</p>
+    </div>
+  </div>
       <div class="mt-6">
-        <p class="text-2xl font-bold">{{totalNominees}}</p>
-        <p class="text-xs opacity-90">Total Nominees Monitored</p>
+        <p class="text-2xl font-bold">{{totalFinalists}}</p>
+        <p class="text-xs opacity-90">Total Finalists</p>
       </div>
-      <button class="mt-6 bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow hover:bg-gray-100 transition">
-        View Monitoring
-      </button>
+      <NuxtLink to="/admin/finalists" class="mt-6 bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow hover:bg-gray-100 transition">
+        View Finalists
+      </NuxtLink>
     </div>
 
   </div>
@@ -199,6 +209,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'; // Import ref, onMounted, and onUnmounted
 import SidebarAdmin from '~/components/SidebarAdmin.vue';
 import UserModal from '~/components/Modals/UserModal.vue'
+import { NuxtLink } from '#components';
 const { $api } = useNuxtApp()
 
 definePageMeta({
@@ -234,6 +245,23 @@ const btiCount = ref(0)
 const btiRtc = ref(0)
 const btiPtc = ref(0)
 const btiTas = ref(0)
+
+const totalFinalists = ref(0)
+const broFinalistCount = ref(0)
+const broFinalistSmall = ref(0)
+const broFinalistMedium = ref(0)
+const broFinalistLarge = ref(0)
+
+const gpFinalistCount = ref(0)
+const gpFinalistSmall = ref(0)
+const gpFinalistMedium = ref(0)
+const gpFinalistLarge = ref(0)
+
+const btiFinalistCount = ref(0)
+const btiFinalistRtc = ref(0)
+const btiFinalistPtc = ref(0)
+const btiFinalistTas = ref(0)
+
 
 // Evaluators
 const executiveOfficeCount = ref(0)
@@ -285,6 +313,37 @@ const fetchDashboardData = async () => {
   }
 }
 
+const fetchFinalistsData = async () => {
+  try {
+    const res = await $api.get('/finalists/total') 
+    const data = res.data  // 👈 fix: extract response data
+
+    totalFinalists.value = data.data
+
+    // BRO
+    broFinalistCount.value = data.BRO.count
+    broFinalistSmall.value = data.BRO.category_count.small ?? 0
+    broFinalistMedium.value = data.BRO.category_count.medium ?? 0
+    broFinalistLarge.value = data.BRO.category_count.large ?? 0
+
+    // GP
+    gpFinalistCount.value = data.GP.count
+    gpFinalistSmall.value = data.GP.category_count.small ?? 0
+    gpFinalistMedium.value = data.GP.category_count.medium ?? 0
+    gpFinalistLarge.value = data.GP.category_count.large ?? 0
+
+    // BTI
+    btiFinalistCount.value = data.TTI.count
+    btiFinalistRtc.value = data.TTI.category_count['rtc-stc'] ?? 0
+    btiFinalistPtc.value = data.TTI.category_count['ptc-dtc'] ?? 0
+    btiFinalistTas.value = data.TTI.category_count['tas'] ?? 0
+
+  } catch (err) {
+    console.error('Error fetching dashboard data:', err)
+  }
+}
+
+
 
 const updateTimeAndDate = () => {
   const now = new Date();
@@ -304,6 +363,7 @@ const updateTimeAndDate = () => {
 onMounted(() => {
     fetchDashboardData()
   updateTimeAndDate(); // Initial update
+  fetchFinalistsData()
   timerInterval = setInterval(updateTimeAndDate, 1000); // Update every second
 });
 
